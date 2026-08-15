@@ -24,54 +24,69 @@
   },
   "candidate_landing_sites": [
     {
-      "center_r": 1188,
-      "center_c": 1316,
-      "patch_size_m": 24,
-      "hazard_pixel_count": 0,
-      "mean_slope_deg": 0.08301764726638794,
-      "mean_severity": 0.0001255140668945387,
-      "distance_from_aim_m": 98.79271228182775,
-      "composite_rank_score": 0.02044292807155964
-    },
-    {
       "center_r": 1192,
       "center_c": 1316,
       "patch_size_m": 24,
       "hazard_pixel_count": 0,
-      "mean_slope_deg": 0.10857266932725906,
-      "mean_severity": 0.00012819822586607188,
+      "mean_slope_deg": 0.14635533094406128,
+      "mean_severity": 0.0001321102026849985,
       "distance_from_aim_m": 95.0789145920377,
-      "composite_rank_score": 0.02068068531829563
+      "composite_rank_score": 0.022089215067376135,
+      "rank": 1,
+      "site_id": "LZ-01",
+      "status": "SAFE TO LAND"
     },
     {
-      "center_r": 1188,
-      "center_c": 1312,
+      "center_r": 1212,
+      "center_c": 1360,
       "patch_size_m": 24,
       "hazard_pixel_count": 0,
-      "mean_slope_deg": 0.09891719371080399,
-      "mean_severity": 0.00012728740694001317,
-      "distance_from_aim_m": 97.40636529508737,
-      "composite_rank_score": 0.020754550231071665
+      "mean_slope_deg": 0.566331684589386,
+      "mean_severity": 0.0002033961209235713,
+      "distance_from_aim_m": 104.9952379872535,
+      "composite_rank_score": 0.038578077327720804,
+      "rank": 2,
+      "site_id": "LZ-02",
+      "status": "SAFE TO LAND"
     },
     {
-      "center_r": 1188,
-      "center_c": 1320,
+      "center_r": 1316,
+      "center_c": 1160,
       "patch_size_m": 24,
       "hazard_pixel_count": 0,
-      "mean_slope_deg": 0.0882485955953598,
-      "mean_severity": 0.0001260361314052716,
-      "distance_from_aim_m": 100.31948963187563,
-      "composite_rank_score": 0.020896542845369376
+      "mean_slope_deg": 0.5153593420982361,
+      "mean_severity": 0.007553990464657545,
+      "distance_from_aim_m": 125.2836781069266,
+      "composite_rank_score": 0.042977347384743,
+      "rank": 3,
+      "site_id": "LZ-03",
+      "status": "SAFE TO LAND"
     },
     {
-      "center_r": 1192,
-      "center_c": 1312,
+      "center_r": 1152,
+      "center_c": 1376,
       "patch_size_m": 24,
       "hazard_pixel_count": 0,
-      "mean_slope_deg": 0.1237773597240448,
-      "mean_severity": 0.00012989780225325376,
-      "distance_from_aim_m": 93.637599285757,
-      "composite_rank_score": 0.02095822837231601
+      "mean_slope_deg": 0.43289005756378174,
+      "mean_severity": 0.0001719631691230461,
+      "distance_from_aim_m": 160.0,
+      "composite_rank_score": 0.0436854376951958,
+      "rank": 4,
+      "site_id": "LZ-04",
+      "status": "SAFE TO LAND"
+    },
+    {
+      "center_r": 1476,
+      "center_c": 1272,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.5691797733306885,
+      "mean_severity": 0.0012896924745291471,
+      "distance_from_aim_m": 196.16319736382766,
+      "composite_rank_score": 0.05528249829386675,
+      "rank": 5,
+      "site_id": "LZ-05",
+      "status": "SAFE TO LAND"
     }
   ]
 }

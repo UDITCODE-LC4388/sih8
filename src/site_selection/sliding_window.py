@@ -7,7 +7,7 @@ landing footprint requirement at 1 m spatial granularity.
 
 from __future__ import annotations
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 import numpy as np
 from scipy import ndimage
 
@@ -23,7 +23,7 @@ def find_candidate_landing_patches(
     graded_severity_map: np.ndarray,
     patch_size_cells: int = LANDER_PATCH_GRID_CELLS,
     stride_cells: int = 4,
-    nominal_aim_point: Tuple[int, int] = (128, 128),
+    nominal_aim_point: Optional[Tuple[int, int]] = None,
 ) -> Tuple[List[Dict[str, any]], List[Dict[str, any]]]:
     """
     Scans the terrain map for candidate 24m x 24m landing patches.
@@ -32,6 +32,9 @@ def find_candidate_landing_patches(
         Tuple of (accepted_candidates_list, rejected_candidates_list_with_discard_reasons).
     """
     h, w = binary_hazard_map.shape
+    if nominal_aim_point is None:
+        nominal_aim_point = (h // 2, w // 2)
+
     accepted_candidates: List[Dict[str, any]] = []
     rejected_candidates: List[Dict[str, any]] = []
 
