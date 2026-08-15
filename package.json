@@ -1,0 +1,12 @@
+{
+  "name": "isro-lunar-hazard-gcs",
+  "version": "1.0.0",
+  "description": "ISRO Lunar Hazard-Map Ground Control Station (GCS)",
+  "main": "api/chat.js",
+  "scripts": {
+    "start": "node api/chat.js"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
