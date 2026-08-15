@@ -1649,9 +1649,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startDescentSimulation() {
     state.descent.isPlaying = true;
-    btnSimPlay.textContent = "Pause Descent";
+    btnSimPlay.textContent = "Pause Simulation";
     if (state.audioEnabled) {
-      speakCallout("Commencing lunar landing terminal descent sequence. Optical TRN tracking active.");
+      speakCallout("Commencing lunar landing terminal flight sequence. Optical TRN tracking active.");
     }
 
     state.descent.timerId = setInterval(() => {
@@ -1669,7 +1669,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function pauseDescentSimulation() {
     state.descent.isPlaying = false;
-    btnSimPlay.textContent = "Resume Descent";
+    btnSimPlay.textContent = "Resume Simulation";
     if (state.descent.timerId) {
       clearInterval(state.descent.timerId);
       state.descent.timerId = null;
@@ -1678,7 +1678,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resetDescentSimulation() {
     pauseDescentSimulation();
-    btnSimPlay.textContent = "Start Descent";
+    btnSimPlay.textContent = "Start Simulation";
     setDescentAltitude(800, false);
   }
 
@@ -2357,9 +2357,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <span>Payload Archive:</span>
           <strong>${data.file_name} (${data.file_size_kb} KB)</strong>
         </div>
-        <div class="trn-spec-row">
+        <div class="trn-spec-row provenance-row">
           <span>SHA-256 Provenance:</span>
-          <strong style="font-size: 10px; color: var(--state-nominal);">${data.sha256_hash}</strong>
+          <strong>${data.sha256_hash}</strong>
         </div>
         <div class="trn-spec-row">
           <span>ref_ortho Tensor:</span>

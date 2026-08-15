@@ -122,8 +122,8 @@
             <button id="btnToolCaliper" class="btn-tool" title="Measure Crater & Boulder Dimensions with Sub-meter Calipers">
               Calipers
             </button>
-            <button id="btnToolDescent" class="btn-tool" title="Simulate Real-time 3D Lander Descent Trajectory">
-              Descent Sim
+            <button id="btnToolDescent" class="btn-tool" title="Simulate Real-time 3D Lander Flight Trajectory">
+              Simulator
             </button>
           </div>
 
@@ -236,7 +236,7 @@
         <!-- Sidebar Navigation Tabs -->
         <div class="sidebar-nav-tabs" id="sidebarNavTabs">
           <button class="sidebar-tab active" data-tab="sites">Landing HUD</button>
-          <button class="sidebar-tab" data-tab="descent">Descent Sim</button>
+          <button class="sidebar-tab" data-tab="descent">Simulator</button>
           <button class="sidebar-tab" data-tab="probe">Lander Probe</button>
           <button class="sidebar-tab" data-tab="caliper">Calipers</button>
           <button class="sidebar-tab" data-tab="copilot">AI Copilot</button>
@@ -331,20 +331,20 @@
           </div>
         </div>
 
-        <!-- Tab 2: 3D Descent Flight Trajectory Simulator -->
+        <!-- Tab 2: 3D Flight Trajectory Simulator -->
         <div class="tab-content" id="tabContentDescent">
           <div class="descent-sim-panel">
             <div class="panel-header">
-              <span class="panel-title">Descent Flight Simulator</span>
+              <span class="panel-title">Flight Simulator</span>
               <span class="panel-tag nominal" id="descentPhaseTag" style="color: var(--state-nominal);">STANDBY (READY)</span>
             </div>
             <p class="sandbox-instructions">
-              Simulates Chandrayaan lander optical descent trajectory from 800m down to soft touchdown, testing real-time hazard avoidance and divert maneuvers.
+              Simulates Chandrayaan lander optical flight trajectory from 800m down to soft touchdown, testing real-time hazard avoidance and divert maneuvers.
             </p>
 
             <!-- Playback Controls -->
             <div class="sim-playback-row">
-              <button id="btnSimPlay" class="btn-control">Start Descent</button>
+              <button id="btnSimPlay" class="btn-control">Start Simulation</button>
               <button id="btnSimReset" class="btn-control">Reset</button>
               <button id="btnSimDivert" class="btn-control" style="border-color: var(--state-caution); color: var(--state-caution);">
                 Divert to Alt Site
@@ -354,7 +354,7 @@
             <!-- Altitude Scrubber -->
             <div class="sim-scrubber-box">
               <div class="sim-scrubber-header">
-                <span>Descent Progress / Altitude</span>
+                <span>Flight Progress / Altitude</span>
                 <strong id="simAltVal">800 m</strong>
               </div>
               <input type="range" id="simAltSlider" min="0" max="800" value="800" class="sim-slider" />
@@ -519,9 +519,9 @@
                 <span>Payload Archive:</span>
                 <strong>trn_reference_package_ch2_tmc_patch_001.npz (18,732 KB)</strong>
               </div>
-              <div class="trn-spec-row">
+              <div class="trn-spec-row provenance-row">
                 <span>SHA-256 Provenance:</span>
-                <strong style="font-size: 10px; color: var(--state-nominal);">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</strong>
+                <strong>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</strong>
               </div>
               <div class="trn-spec-row">
                 <span>ref_ortho Tensor:</span>
