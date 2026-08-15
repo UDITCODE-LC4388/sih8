@@ -1,0 +1,77 @@
+{
+  "format_version": "1.0-ISRO-TRN",
+  "grid_spacing_meters": 1.0,
+  "scene_metadata": {
+    "tile_id": "ch2_tmc_patch_004_r60256_c5000",
+    "mission": "Chandrayaan-2",
+    "instrument": "TMC",
+    "source_archive": "ISRO ISSDC / PRADAN",
+    "dtm_source_file": "ch2_tmc_ndn_20220511T0809312081_d_dtm_d18.tif",
+    "oth_source_file": "ch2_tmc_ndn_20220511T0809312081_d_oth_d18.tif",
+    "acquisition_date": "2022-05-11",
+    "sun_elevation_deg": 39.141392,
+    "sun_azimuth_deg": 238.214475,
+    "row_offset": 60256,
+    "col_offset": 5000,
+    "height_px": 256,
+    "width_px": 256,
+    "native_dem_resolution_m": 5.0,
+    "native_ortho_resolution_m": 5.0,
+    "dem_min_elev_m": 1275.0,
+    "dem_max_elev_m": 1443.0,
+    "dem_mean_elev_m": 1353.1326904296875,
+    "provided_by_user": true
+  },
+  "candidate_landing_sites": [
+    {
+      "center_r": 1272,
+      "center_c": 1296,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.6312215924263,
+      "mean_severity": 0.00021720465156249702,
+      "distance_from_aim_m": 17.88854381999832,
+      "composite_rank_score": 0.02535183034995671
+    },
+    {
+      "center_r": 1276,
+      "center_c": 1300,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.6392599940299988,
+      "mean_severity": 0.00021707253472413868,
+      "distance_from_aim_m": 20.396078054371138,
+      "composite_rank_score": 0.02607931397075705
+    },
+    {
+      "center_r": 1272,
+      "center_c": 1300,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.6903647184371948,
+      "mean_severity": 0.0003119137545581907,
+      "distance_from_aim_m": 21.540659228538015,
+      "composite_rank_score": 0.028104838318611127
+    },
+    {
+      "center_r": 1280,
+      "center_c": 1304,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.6827448606491089,
+      "mean_severity": 0.00022636278299614787,
+      "distance_from_aim_m": 24.0,
+      "composite_rank_score": 0.028245810809702607
+    },
+    {
+      "center_r": 1276,
+      "center_c": 1304,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.7046029567718506,
+      "mean_severity": 0.0003084181807935238,
+      "distance_from_aim_m": 24.331050121192877,
+      "composite_rank_score": 0.029098469983320278
+    }
+  ]
+}

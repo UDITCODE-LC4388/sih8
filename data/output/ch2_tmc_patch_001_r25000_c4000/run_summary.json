@@ -1,0 +1,64 @@
+{
+  "tile_id": "ch2_tmc_patch_001_r25000_c4000",
+  "grid_resolution_m": 1.0,
+  "elevation_min_m": -3424.462158203125,
+  "elevation_max_m": -2839.601318359375,
+  "mean_slope_deg": 9.620022773742676,
+  "max_slope_deg": 89.52692413330078,
+  "hazard_coverage_pct": 35.34965515136719,
+  "safe_patch_count_24m": 99060,
+  "rejected_patch_count_24m": 302896,
+  "top_ranked_sites": [
+    {
+      "center_r": 1188,
+      "center_c": 1316,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.08301764726638794,
+      "mean_severity": 0.0001255140668945387,
+      "distance_from_aim_m": 98.79271228182775,
+      "composite_rank_score": 0.02044292807155964
+    },
+    {
+      "center_r": 1192,
+      "center_c": 1316,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.10857266932725906,
+      "mean_severity": 0.00012819822586607188,
+      "distance_from_aim_m": 95.0789145920377,
+      "composite_rank_score": 0.02068068531829563
+    },
+    {
+      "center_r": 1188,
+      "center_c": 1312,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.09891719371080399,
+      "mean_severity": 0.00012728740694001317,
+      "distance_from_aim_m": 97.40636529508737,
+      "composite_rank_score": 0.020754550231071665
+    },
+    {
+      "center_r": 1188,
+      "center_c": 1320,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.0882485955953598,
+      "mean_severity": 0.0001260361314052716,
+      "distance_from_aim_m": 100.31948963187563,
+      "composite_rank_score": 0.020896542845369376
+    },
+    {
+      "center_r": 1192,
+      "center_c": 1312,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.1237773597240448,
+      "mean_severity": 0.00012989780225325376,
+      "distance_from_aim_m": 93.637599285757,
+      "composite_rank_score": 0.02095822837231601
+    }
+  ],
+  "trn_package_path": "data/output/ch2_tmc_patch_001_r25000_c4000/trn_reference_package.npz"
+}

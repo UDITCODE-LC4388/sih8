@@ -1,0 +1,26 @@
+{
+  "format_version": "1.0-ISRO-TRN",
+  "grid_spacing_meters": 1.0,
+  "scene_metadata": {
+    "tile_id": "lro_nac_patch_01_02_m1529414132re_r16000",
+    "mission": "LRO",
+    "instrument": "NAC / SLDEM",
+    "source_archive": "NASA PDS Imaging & Geosciences / USGS MAP2",
+    "ortho_source_file": "M1529414132RE.IMG",
+    "dem_source_file": "LunarLROLOLAKaguya_MAP2_EQUI.tif",
+    "acquisition_date": "2026-03-29",
+    "sun_elevation_deg": 30.0,
+    "sun_azimuth_deg": 180.0,
+    "row_offset": 16000,
+    "col_offset": 2000,
+    "height_px": 256,
+    "width_px": 256,
+    "native_dem_resolution_m": 59.2,
+    "native_ortho_resolution_m": 0.5,
+    "dem_min_elev_m": 288.5,
+    "dem_max_elev_m": 1664.5,
+    "dem_mean_elev_m": 877.8314208984375,
+    "provided_by_user": true
+  },
+  "candidate_landing_sites": []
+}

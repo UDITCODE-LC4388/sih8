@@ -1,0 +1,54 @@
+{
+  "tile_id": "lro_nac_patch_01_01_m1529414132re_r8000",
+  "grid_resolution_m": 1.0,
+  "elevation_min_m": -3416.646728515625,
+  "elevation_max_m": -1763.801025390625,
+  "mean_slope_deg": 35.70823669433594,
+  "max_slope_deg": 89.4292221069336,
+  "hazard_coverage_pct": 96.36412048339844,
+  "safe_patch_count_24m": 4,
+  "rejected_patch_count_24m": 401952,
+  "top_ranked_sites": [
+    {
+      "center_r": 2316,
+      "center_c": 1968,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 3.486259698867798,
+      "mean_severity": 0.0060285101644694805,
+      "distance_from_aim_m": 1243.6398192402814,
+      "composite_rank_score": 0.423856332236277
+    },
+    {
+      "center_r": 2316,
+      "center_c": 1964,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 3.6464691162109375,
+      "mean_severity": 0.006931588519364595,
+      "distance_from_aim_m": 1241.4314318559846,
+      "composite_rank_score": 0.4292475000300705
+    },
+    {
+      "center_r": 2320,
+      "center_c": 1964,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 3.6828112602233887,
+      "mean_severity": 0.007523558102548122,
+      "distance_from_aim_m": 1244.77146496857,
+      "composite_rank_score": 0.4315316394437104
+    },
+    {
+      "center_r": 2316,
+      "center_c": 1960,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 3.994612693786621,
+      "mean_severity": 0.009995345957577229,
+      "distance_from_aim_m": 1239.2320202447966,
+      "composite_rank_score": 0.44197476434514604
+    }
+  ],
+  "trn_package_path": "data/output/lro_nac_patch_01_01_m1529414132re_r8000/trn_reference_package.npz"
+}

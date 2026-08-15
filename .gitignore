@@ -1,0 +1,43 @@
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Project Data & Checkpoints
+data/raw/
+data/processed/patches/
+data/overlaps/
+checkpoints/
+*.pth
+*.pt
+*.onnx
+*.zip
+*.tar.gz
+*.tif
+*.tiff
+*.img
+*.IMG
+*.npy
+*.npz
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+.env
+.env.*
+scratch/
+.agents/

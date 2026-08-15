@@ -1,0 +1,13 @@
+{
+  "tile_id": "lro_nac_patch_03_02_m1529428315re_r16000",
+  "grid_resolution_m": 1.0,
+  "elevation_min_m": 284.84625244140625,
+  "elevation_max_m": 1711.0814208984375,
+  "mean_slope_deg": 38.243507385253906,
+  "max_slope_deg": 88.70623779296875,
+  "hazard_coverage_pct": 97.43391418457031,
+  "safe_patch_count_24m": 0,
+  "rejected_patch_count_24m": 401956,
+  "top_ranked_sites": [],
+  "trn_package_path": "data/output/lro_nac_patch_03_02_m1529428315re_r16000/trn_reference_package.npz"
+}

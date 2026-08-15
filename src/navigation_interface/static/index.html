@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISRO Lunar Hazard-Map & Safe Landing GCS</title>
+  <!-- IBM Plex Typography Suite -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="gcs-container">
+    <!-- Top Mission Header & Telemetry Ticker -->
+    <header class="gcs-header">
+      <div class="brand">
+        <div class="mission-logo">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3"/>
+            <path d="M12 3a9 9 0 1 0 9 9A9 9 0 0 1 12 3z" fill="currentColor" fill-opacity="0.2"/>
+            <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="mission-title">ISRO LUNAR HAZARD-MAP GCS</div>
+          <div class="mission-sub">SIH260008 • 1m Super-Resolution Safe Landing Ground Station</div>
+        </div>
+      </div>
+
+      <!-- Real-Time Telemetry Bar -->
+      <div class="telemetry-bar">
+        <div class="telemetry-pill">
+          <span class="pill-dot nominal"></span>
+          <span class="pill-label">GRID GSD:</span>
+          <span class="pill-val">1.0 m</span>
+        </div>
+        <div class="telemetry-pill">
+          <span class="pill-dot nominal"></span>
+          <span class="pill-label">SAFETY GATE:</span>
+          <span class="pill-val">PASSED (FNR 1.09%)</span>
+        </div>
+        <div class="telemetry-pill">
+          <span class="pill-dot reference"></span>
+          <span class="pill-label">PROVENANCE:</span>
+          <span class="pill-val">33 / 33 REAL ASSETS</span>
+        </div>
+        <div class="telemetry-pill">
+          <span class="pill-dot reference"></span>
+          <span class="pill-label">AI COPILOT:</span>
+          <span class="pill-val">LLaMA-3.3-70B</span>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button id="btnAudioToggle" class="btn-control" title="Toggle Tactical Audio Callouts">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <span id="audioStatusText">Audio ON</span>
+        </button>
+        <button id="btnDossierModal" class="btn-control" title="Generate Comprehensive Mission Flight Clearance Dossier">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Mission Dossier
+        </button>
+        <button id="btnTrnModal" class="btn-control">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="15" y1="3" x2="15" y2="21"/>
+          </svg>
+          TRN Package
+        </button>
+        <button id="btnValidationModal" class="btn-control">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          Validation Matrix
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Split -->
+    <main class="gcs-main">
+      <!-- Left Column: Dual Visualizer, Interactive Tools & Transect Profiler -->
+      <section class="viewport-section">
+        <!-- Viewport Controls & Interactive Mode Toolbar -->
+        <div class="viewport-controls">
+          <div class="control-group">
+            <span class="gcs-label">Patch:</span>
+            <select id="patchSelector" class="gcs-select"></select>
+          </div>
+
+          <!-- View Modes: 2D GIS / 3D Topo / Split View -->
+          <div class="viewmode-tabs" id="viewModeTabs">
+            <button class="tab-btn active" data-mode="2d">2D High-Res</button>
+            <button class="tab-btn" data-mode="3d">3D Topo Mesh</button>
+            <button class="tab-btn" data-mode="split">Split 2D/3D</button>
+          </div>
+
+          <!-- Interactive Tool Switches -->
+          <div class="tool-switches">
+            <button id="btnToolTransect" class="btn-tool active" title="Draw 1D Ground Truth Elevation Transect">
+              📐 Transect
+            </button>
+            <button id="btnToolCurtain" class="btn-tool" title="Swipe Curtain: 5m Raw Input vs 1m Super-Resolved Output">
+              ↔️ 5m vs 1m Curtain
+            </button>
+            <button id="btnToolProbe" class="btn-tool" title="Drag-and-Drop 24m Lander Touchdown Safety Probe">
+              🎯 Lander Probe
+            </button>
+            <button id="btnToolCaliper" class="btn-tool" title="Measure Crater & Boulder Dimensions with Sub-meter Calipers">
+              📏 Calipers
+            </button>
+            <button id="btnToolDescent" class="btn-tool" title="Simulate Real-time 3D Lander Descent Trajectory">
+              🚀 Descent Sim
+            </button>
+          </div>
+
+          <!-- Layer Tabs -->
+          <div class="layer-tabs" id="layerTabs">
+            <button class="tab-btn active" data-layer="dem">1m DEM</button>
+            <button class="tab-btn" data-layer="ortho">1m Ortho</button>
+            <button class="tab-btn" data-layer="slope">Horn Slope (&gt;10°)</button>
+            <button class="tab-btn" data-layer="hazard">Fused Hazard</button>
+            <button class="tab-btn" data-layer="severity">Fuzzy Severity</button>
+          </div>
+
+          <!-- Opacity Blender -->
+          <div class="opacity-blender" title="Blend Overlay against 1m Ortho Underlay">
+            <span class="gcs-label">Blend:</span>
+            <input type="range" id="opacitySlider" class="opacity-slider" min="0" max="100" value="85" />
+            <span id="opacityVal">85%</span>
+          </div>
+
+          <button id="btnClearTransect" class="btn-control" title="Clear Transect Line">Clear</button>
+        </div>
+
+        <!-- Visualizer Canvas Workspace (Split or Single) -->
+        <div class="visualizer-workspace" id="visualizerWorkspace">
+          <!-- 2D Canvas Stack Container -->
+          <div class="viewport-2d" id="viewport2D">
+            <div class="canvas-stack" id="canvasStack">
+              <img id="rasterUnderlay" class="raster-underlay" alt="Ortho Underlay" />
+              <img id="rasterOverlay" class="raster-overlay" alt="Active Layer Overlay" />
+              <!-- Split Comparison Curtain Underlay (5m Raw) -->
+              <img id="rasterCurtain" class="raster-curtain hidden" alt="5m Raw Sensor Layer" />
+              <canvas id="interactionCanvas" class="interaction-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- 3D WebGL Mesh Viewport Container -->
+          <div class="viewport-3d hidden" id="viewport3D">
+            <div class="toolbar-3d">
+              <button id="btnWireframe3D" class="btn-control">Wireframe: OFF</button>
+              <button id="btnExag3D" class="btn-control">Exaggeration: 1.5x</button>
+              <button id="btnResetCamera3D" class="btn-control">Reset Camera</button>
+            </div>
+            <div id="threeContainer" style="width: 100%; height: 100%;"></div>
+          </div>
+
+          <!-- Floating Solar Illumination Widget -->
+          <div class="solar-hud-widget" id="solarHudWidget">
+            <div class="solar-hud-title">
+              <span>☀️ Solar Geometry</span>
+              <span id="solarPresetTag">PDS4 Calibrated</span>
+            </div>
+            <div class="solar-control-row">
+              <span class="solar-label">Azimuth:</span>
+              <input type="range" id="solarAzimuthSlider" min="0" max="360" value="238" class="solar-slider" />
+              <span id="solarAzimuthVal" class="solar-val">238°</span>
+            </div>
+            <div class="solar-control-row">
+              <span class="solar-label">Elevation:</span>
+              <input type="range" id="solarElevationSlider" min="0" max="90" value="39" class="solar-slider" />
+              <span id="solarElevationVal" class="solar-val">39.1°</span>
+            </div>
+          </div>
+
+          <!-- Crosshair Telemetry Strip -->
+          <div class="cursor-telemetry" id="cursorTelemetry">
+            <span class="telemetry-item">POS: <strong id="telemetryPos">X: -, Y: -</strong></span>
+            <span class="telemetry-item">ELEV: <strong id="telemetryElev">- m</strong></span>
+            <span class="telemetry-item">SLOPE: <strong id="telemetrySlope">-°</strong></span>
+            <span id="telemetryStatus" class="telemetry-status safe">NOMINAL</span>
+          </div>
+
+          <!-- Active Layer Legend -->
+          <div class="viewport-legend" id="viewportLegend">
+            <div class="legend-title" id="legendTitle">1m DEM Topography</div>
+            <div class="legend-bar" id="legendBar"></div>
+            <div class="legend-labels">
+              <span id="legendMin">-3473 m</span>
+              <span id="legendMid">-3322 m</span>
+              <span id="legendMax">-3172 m</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ground Truth 1D Transect Cross-Section Profiler Dock (Elevated & Roomy) -->
+        <div class="transect-dock" id="transectDock">
+          <div class="transect-header">
+            <div class="transect-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              <span>Ground Truth Transect Profile</span>
+              <span class="transect-instruction">[Drag line across map to re-profile]</span>
+            </div>
+            <div class="transect-metrics" id="transectMetrics">
+              <span>LENGTH: <strong id="metricDist">0.0 m</strong></span>
+              <span>RELIEF: <strong id="metricRelief">0.0 m</strong></span>
+              <span>MAX SLOPE: <strong id="metricMaxSlope">0.0°</strong></span>
+              <span>MEAN SLOPE: <strong id="metricMeanSlope">0.0°</strong></span>
+              <span id="transectSafetyBadge" class="telemetry-status safe">SAFE CORRIDOR</span>
+            </div>
+          </div>
+          <div class="transect-chart-container">
+            <canvas id="transectCanvas" class="transect-canvas"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Multi-Tab Mission Sidebar -->
+      <aside class="sidebar-section">
+        <!-- Sidebar Navigation Tabs -->
+        <div class="sidebar-nav-tabs" id="sidebarNavTabs">
+          <button class="sidebar-tab active" data-tab="sites">Landing HUD</button>
+          <button class="sidebar-tab" data-tab="descent">Descent Sim</button>
+          <button class="sidebar-tab" data-tab="probe">Lander Probe</button>
+          <button class="sidebar-tab" data-tab="caliper">Calipers</button>
+          <button class="sidebar-tab" data-tab="copilot">AI Copilot</button>
+          <button class="sidebar-tab" data-tab="trn">TRN Package</button>
+        </div>
+
+        <!-- Tab 1: Landing Sites & Telemetry HUD -->
+        <div class="tab-content active" id="tabContentSites">
+          <!-- Instrument Cluster -->
+          <div class="instrument-cluster">
+            <!-- Gauge 1: Slope Safety -->
+            <div class="gauge-card">
+              <div class="gauge-label">Landing Slope</div>
+              <div class="gauge-svg-wrap">
+                <svg viewBox="0 0 100 60" class="gauge-svg">
+                  <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+                  <path id="gaugeSlopeArc" d="M 10 50 A 40 40 0 0 1 45 15" fill="none" stroke="var(--state-nominal)" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="gauge-val-text" id="gaugeSlopeVal">2.4°</div>
+              <div class="gauge-sub">Limit: 10.0° Safe</div>
+            </div>
+
+            <!-- Gauge 2: Aim Offset -->
+            <div class="gauge-card">
+              <div class="gauge-label">Aim Offset</div>
+              <div class="gauge-svg-wrap">
+                <svg viewBox="0 0 100 60" class="gauge-svg">
+                  <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+                  <path id="gaugeRoughnessArc" d="M 10 50 A 40 40 0 0 1 40 18" fill="none" stroke="var(--state-nominal)" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="gauge-val-text" id="gaugeRoughnessVal">98 m</div>
+              <div class="gauge-sub">Delta-V Penalty</div>
+            </div>
+
+            <!-- Gauge 3: Solar Elevation -->
+            <div class="gauge-card">
+              <div class="gauge-label">Sun Elevation</div>
+              <div class="gauge-svg-wrap">
+                <svg viewBox="0 0 100 60" class="gauge-svg">
+                  <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+                  <path id="gaugeSunArc" d="M 10 50 A 40 40 0 0 1 65 22" fill="none" stroke="var(--state-reference)" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="gauge-val-text" id="gaugeSunVal">39.1°</div>
+              <div class="gauge-sub">Azimuth: 238.2°</div>
+            </div>
+          </div>
+
+          <!-- Targeted Landing Site Detail Matrix -->
+          <div class="site-detail-matrix" id="siteDetailMatrix">
+            <div class="matrix-header">
+              <span class="matrix-title" id="selectedSiteTitle">Site #1 Telemetry Breakdown</span>
+              <span class="telemetry-status safe" id="selectedSiteSafetyBadge">GO TO TOUCHDOWN</span>
+            </div>
+            <div class="matrix-grid">
+              <div class="matrix-item">
+                <span class="matrix-label">Center Coords</span>
+                <strong id="matrixCoords">X: 1316, Y: 1188</strong>
+              </div>
+              <div class="matrix-item">
+                <span class="matrix-label">Mean Slope</span>
+                <strong id="matrixSlope">0.1°</strong>
+              </div>
+              <div class="matrix-item">
+                <span class="matrix-label">Hazard Pixels</span>
+                <strong id="matrixHazardCount">0 / 576 px (0.0%)</strong>
+              </div>
+              <div class="matrix-item">
+                <span class="matrix-label">Severity Score</span>
+                <strong id="matrixSeverity">0.0001 (Negligible)</strong>
+              </div>
+              <div class="matrix-item">
+                <span class="matrix-label">Aim Offset Dist</span>
+                <strong id="matrixDistance">98.8 m</strong>
+              </div>
+              <div class="matrix-item">
+                <span class="matrix-label">Safety Index</span>
+                <strong id="matrixSafetyIndex" style="color: var(--state-nominal);">98.0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ranked Safe Landing Sites HUD -->
+          <div class="site-ranker-panel">
+            <div class="panel-header">
+              <span class="panel-title">Ranked 24m Landing Sites</span>
+              <span class="panel-tag" id="safeSitesCount">0 SITES</span>
+            </div>
+            <div class="site-cards-list" id="siteCardsList"></div>
+          </div>
+        </div>
+
+        <!-- Tab 2: 3D Descent Flight Trajectory Simulator -->
+        <div class="tab-content" id="tabContentDescent">
+          <div class="descent-sim-panel">
+            <div class="panel-header">
+              <span class="panel-title">Descent Flight Simulator</span>
+              <span class="panel-tag" id="descentPhaseTag">PHASE: BRAKING</span>
+            </div>
+            <p class="sandbox-instructions">
+              Simulates Chandrayaan lander optical descent trajectory from 800m down to soft touchdown, testing real-time hazard avoidance and divert maneuvers.
+            </p>
+
+            <!-- Playback Controls -->
+            <div class="sim-playback-row">
+              <button id="btnSimPlay" class="btn-control">▶️ Start Descent</button>
+              <button id="btnSimReset" class="btn-control">🔄 Reset</button>
+              <button id="btnSimDivert" class="btn-control" style="border-color: var(--state-caution); color: var(--state-caution);">
+                ⚡ Divert to Alt Site
+              </button>
+            </div>
+
+            <!-- Altitude Scrubber -->
+            <div class="sim-scrubber-box">
+              <div class="sim-scrubber-header">
+                <span>Descent Progress / Altitude</span>
+                <strong id="simAltVal">800 m</strong>
+              </div>
+              <input type="range" id="simAltSlider" min="0" max="800" value="800" class="sim-slider" />
+              <div class="sim-flight-phases">
+                <span>800m Rough Brake</span>
+                <span>400m Optical TRN</span>
+                <span>150m Divert</span>
+                <span>0m Touchdown</span>
+              </div>
+            </div>
+
+            <!-- Flight Dynamics Card -->
+            <div class="flight-dynamics-card">
+              <div class="dyn-row">
+                <span class="dyn-label">Vertical Velocity (Vz):</span>
+                <strong id="simVz">-18.4 m/s</strong>
+              </div>
+              <div class="dyn-row">
+                <span class="dyn-label">Horizontal Velocity (Vxy):</span>
+                <strong id="simVxy">4.2 m/s</strong>
+              </div>
+              <div class="dyn-row">
+                <span class="dyn-label">Target Dispersion Ellipse:</span>
+                <strong id="simDispersion">32.4 m (3σ)</strong>
+              </div>
+              <div class="dyn-row">
+                <span class="dyn-label">Target Touchdown Site:</span>
+                <strong id="simTargetSite" style="color: var(--state-nominal);">Site #1 (Confirmed Safe)</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Lander Sandbox & Footprint Probe -->
+        <div class="tab-content" id="tabContentProbe">
+          <div class="sandbox-panel">
+            <div class="panel-header">
+              <span class="panel-title">Interactive Lander Sandbox</span>
+              <span class="panel-tag">24m x 24m Footprint</span>
+            </div>
+            <p class="sandbox-instructions">
+              Click anywhere on the 2D terrain to drop the virtual 4-leg lander footprint and simulate touchdown stability, leg tilt, and local clearance margins.
+            </p>
+
+            <div class="sandbox-probe-card" id="sandboxProbeCard">
+              <div class="probe-header">
+                <span>Touchdown Simulation Point</span>
+                <span id="probeVerdict" class="telemetry-status safe">SAFE TO LAND</span>
+              </div>
+              <div class="probe-grid">
+                <div class="probe-leg">
+                  <span class="leg-tag">LEG 1 (NW)</span>
+                  <span id="leg1Elev">-3120.4 m</span>
+                </div>
+                <div class="probe-leg">
+                  <span class="leg-tag">LEG 2 (NE)</span>
+                  <span id="leg2Elev">-3120.2 m</span>
+                </div>
+                <div class="probe-leg">
+                  <span class="leg-tag">LEG 3 (SE)</span>
+                  <span id="leg3Elev">-3120.5 m</span>
+                </div>
+                <div class="probe-leg">
+                  <span class="leg-tag">LEG 4 (SW)</span>
+                  <span id="leg4Elev">-3120.3 m</span>
+                </div>
+              </div>
+              <div class="probe-metrics-list">
+                <div class="probe-row">
+                  <span>Differential Leg Tilt:</span>
+                  <strong id="probeTilt">0.4° (Limit: 10.0°)</strong>
+                </div>
+                <div class="probe-row">
+                  <span>Local Relief Span:</span>
+                  <strong id="probeRelief">0.3 m</strong>
+                </div>
+                <div class="probe-row">
+                  <span>Boulder Clearance Risk:</span>
+                  <strong id="probeBoulderRisk" style="color: var(--state-nominal);">NONE DETECTED</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Sub-Meter Photogrammetry Calipers -->
+        <div class="tab-content" id="tabContentCaliper">
+          <div class="caliper-panel">
+            <div class="panel-header">
+              <span class="panel-title">Planetary Calipers & Profiler</span>
+              <span class="panel-tag">Sub-Meter Precision</span>
+            </div>
+            <p class="sandbox-instructions">
+              Drag across any crater rim or boulder on the 2D canvas to calculate geodesic diameter, bowl depth, and slope gradients.
+            </p>
+
+            <div class="caliper-metrics-card">
+              <div class="caliper-row">
+                <span class="caliper-label">Feature Span (Diameter):</span>
+                <strong id="caliperDist">0.0 m</strong>
+              </div>
+              <div class="caliper-row">
+                <span class="caliper-label">Rim-to-Floor Depth:</span>
+                <strong id="caliperDepth">0.0 m</strong>
+              </div>
+              <div class="caliper-row">
+                <span class="caliper-label">Rim Wall Slope:</span>
+                <strong id="caliperSlope">0.0°</strong>
+              </div>
+              <div class="caliper-row">
+                <span class="caliper-label">Classification:</span>
+                <strong id="caliperClass" style="color: var(--state-reference);">NO SELECTION</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: AI Flight Copilot -->
+        <div class="tab-content" id="tabContentCopilot">
+          <div class="copilot-section">
+            <div class="panel-header">
+              <span class="panel-title">AI Flight Copilot</span>
+              <span class="panel-tag">LLaMA-3.3-70B</span>
+            </div>
+
+            <!-- Chat Stream -->
+            <div class="copilot-stream" id="copilotStream">
+              <div class="chat-msg copilot">
+                <div class="chat-msg-header">
+                  <span>Mission Copilot</span>
+                  <span>SYSTEM READY</span>
+                </div>
+                <p>Lunar Mission Copilot active. Super-resolved 1.0m grid loaded. All safety gates passed with 0% hazard escape.</p>
+              </div>
+            </div>
+
+            <!-- Tactical Prompt Chips -->
+            <div class="copilot-chips">
+              <button class="chip-btn" data-prompt="Analyze primary landing site stability and slope limits.">Analyze Site #1</button>
+              <button class="chip-btn" data-prompt="Check solar illumination and shadow hazards for the current patch.">Solar & Shadows</button>
+              <button class="chip-btn" data-prompt="Summarize photogrammetric accuracy and false negative rate.">Validation KPIs</button>
+              <button class="chip-btn" data-prompt="Compare top 3 landing sites by slope and aim distance.">Compare Sites</button>
+            </div>
+
+            <!-- Input Form -->
+            <form class="copilot-input-form" id="copilotForm">
+              <input type="text" id="copilotInput" class="copilot-input" placeholder="Query flight copilot (e.g. 'Compare top 3 sites')..." autocomplete="off" />
+              <button type="submit" class="btn-send">Send</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tab 6: TRN Reference Package Inspector -->
+        <div class="tab-content" id="tabContentTrn">
+          <div class="trn-panel" id="trnPanel">
+            <div class="panel-header">
+              <span class="panel-title">TRN Reference Package</span>
+              <span class="panel-tag">NPZ Payload</span>
+            </div>
+            <div class="trn-spec-list" id="trnSpecList">
+              <div style="padding: 12px; color: var(--text-secondary);">Loading TRN payload metadata...</div>
+            </div>
+            <div class="trn-actions">
+              <a id="btnDownloadTrn" class="btn-control" style="text-decoration: none; justify-content: center;" href="#" target="_blank">
+                ⬇️ Export TRN Reference Package (.npz)
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Mission Flight Clearance Dossier Modal -->
+    <div class="modal-backdrop hidden" id="dossierModal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <span class="modal-title">ISRO Lunar Landing Mission Clearance Dossier</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button id="btnPrintDossier" class="btn-control">🖨️ Print / Save PDF</button>
+            <button id="btnCloseDossier" class="modal-close-btn">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body" id="dossierModalBody">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Photogrammetric Validation Matrix Modal -->
+    <div class="modal-backdrop hidden" id="valModal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <span class="modal-title">ISRO Chandrayaan-2 Photogrammetric Validation Report</span>
+          <button id="btnCloseModal" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="valModalBody">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WebGL / Three.js Standalone Bundle -->
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+  <!-- Application Client Controller -->
+  <script src="app.js"></script>
+</body>
+</html>

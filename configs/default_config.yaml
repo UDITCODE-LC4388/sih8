@@ -1,0 +1,30 @@
+version: "1.0"
+
+ingestion:
+  patch_size: 256
+  overlap_min_area_km2: 0.05
+  target_crs: "IAU_2015:30100"
+
+sr_engine:
+  image_scale_factor: 5
+  dem_scale_factor: 10
+  batch_size: 8
+  gradient_accumulation_steps: 2
+  stage_a_lr: 0.0002
+  stage_b_lr: 0.00002
+  mc_dropout_samples: 10
+  n_critic: 1
+  weight_decay: 0.0001
+
+hazard:
+  slope_threshold_deg: 10.0
+  crater_depth_threshold_m: 1.0
+  boulder_height_dem_threshold_m: 1.0
+  boulder_height_shadow_threshold_m: 0.32
+  uncertainty_threshold: 0.65
+
+site_selection:
+  patch_size_m: 24.0
+  hazard_margin_cells: 2
+  max_slope_deg: 10.0
+  top_k_candidates: 10

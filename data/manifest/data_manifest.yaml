@@ -1,0 +1,408 @@
+version: '1.0'
+records:
+- id: ch2_tmc_nca_20260625T0235191073_d_img_d18
+  instrument: TMC
+  mission: chandrayaan-2
+  path: data/raw/tmc/ch2_tmc_nca_20260625T0235191073_d_img_d18/data/calibrated/20260625/ch2_tmc_nca_20260625T0235191073_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: a56d70de7e672a461d8f1ff97805c173aec3a94c3c035a945566bf5bf56722d5
+  acquisition_date: '2026-06-25'
+  sun_elevation_deg: 35.219629
+  sun_azimuth_deg: 348.70128
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter TMC2 Experiment, Resolution: 5.96m, Lines:
+    133493, Samples: 4000'
+- id: ch2_tmc_ncf_20260625T0235191073_d_img_d18
+  instrument: TMC
+  mission: chandrayaan-2
+  path: data/raw/tmc/ch2_tmc_ncf_20260625T0235191073_d_img_d18/data/calibrated/20260625/ch2_tmc_ncf_20260625T0235191073_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: 20334e9264cf585354a546b5ef453b5e40e479f5bf89157b041741a83b379e76
+  acquisition_date: '2026-06-25'
+  sun_elevation_deg: 35.219629
+  sun_azimuth_deg: 348.70128
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter TMC2 Experiment, Resolution: 5.96m, Lines:
+    133492, Samples: 4000'
+- id: ch2_tmc_ncn_20260625T0235191104_d_img_d18
+  instrument: TMC
+  mission: chandrayaan-2
+  path: data/raw/tmc/ch2_tmc_ncn_20260625T0235191104_d_img_d18/data/calibrated/20260625/ch2_tmc_ncn_20260625T0235191104_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: 894a20bcc4ce95ec17414ebf7378179fb6056f73dfe4dc88a6909228e4e53c2c
+  acquisition_date: '2026-06-25'
+  sun_elevation_deg: 35.219629
+  sun_azimuth_deg: 348.70128
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter TMC2 Experiment, Resolution: 5.96m, Lines:
+    133491, Samples: 4000'
+- id: ch2_tmc_ndn_20220511T0809312081_d_dtm_d18
+  instrument: TMC
+  mission: Chandrayaan-2
+  path: data/raw/tmc/ch2_tmc_ndn_20220511T0809312081_d_dtm_d18_5m/data/derived/20220511/ch2_tmc_ndn_20220511T0809312081_d_dtm_d18.tif
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: 7543f73f79b3db7c6a99429ce851bd36d629c2f12865cd2fd6bc5f4f55e51264
+  acquisition_date: '2022-05-11'
+  sun_elevation_deg: 39.141392
+  sun_azimuth_deg: 238.214475
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter TMC 2 Experiment, Resolution: 5.0m, Lines:
+    306008, Samples: 12457'
+- id: ch2_tmc_ndn_20220511T0809312081_d_oth_d18
+  instrument: TMC
+  mission: chandrayaan-2
+  path: data/raw/tmc/ch2_tmc_ndn_20220511T0809312081_d_oth_d18_5m/data/derived/20220511/ch2_tmc_ndn_20220511T0809312081_d_oth_d18.tif
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: 0054117c0e414df18b993c27b46ec30b8b00bd20fccac51a68e48adfce7b1561
+  acquisition_date: '2022-05-11'
+  sun_elevation_deg: 39.141392
+  sun_azimuth_deg: 238.214475
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter TMC 2 Experiment, Resolution: 5.0m, Lines:
+    306008, Samples: 12458'
+- id: ch2_ohr_ncp_20211228T2209123959_d_img_d18
+  instrument: OHRC
+  mission: Chandrayaan-2
+  path: data/raw/ohrc/ch2_ohr_ncp_20211228T2209123959_d_img_d18/data/calibrated/20211228/ch2_ohr_ncp_20211228T2209123959_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: 500ce6d82f0fdb167415330c703835729116d7eb7ce0881e5003fb204dee5fc5
+  acquisition_date: '2021-12-28'
+  sun_elevation_deg: -0.043949
+  sun_azimuth_deg: 152.400416
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter OHRC Experiment, Resolution: 0.28m, Lines:
+    79796, Samples: 12000'
+- id: ch2_ohr_ncp_20241115T1326321339_d_img_d18
+  instrument: OHRC
+  mission: Chandrayaan-2
+  path: data/raw/ohrc/ch2_ohr_ncp_20241115T1326321339_d_img_d18/data/calibrated/20241115/ch2_ohr_ncp_20241115T1326321339_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: b75aa37d47e6f475913dbe45c2805693b3f451aa697eb6924b82ac9a04648bc3
+  acquisition_date: '2024-11-15'
+  sun_elevation_deg: -0.169616
+  sun_azimuth_deg: 180.299967
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter OHRC Experiment, Resolution: 0.24m, Lines:
+    101074, Samples: 12000'
+- id: ch2_ohr_ncp_20241115T1525004388_d_img_d18
+  instrument: OHRC
+  mission: Chandrayaan-2
+  path: data/raw/ohrc/ch2_ohr_ncp_20241115T1525004388_d_img_d18/data/calibrated/20241115/ch2_ohr_ncp_20241115T1525004388_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: c40f0a646cf5f8d530ec46b39632b17126a91c4454766494a7aa5c4c8a414f60
+  acquisition_date: '2024-11-15'
+  sun_elevation_deg: 0.785661
+  sun_azimuth_deg: 242.980602
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter OHRC Experiment, Resolution: 0.24m, Lines:
+    101074, Samples: 12000'
+- id: ch2_ohr_ncp_20251010T0942085687_d_img_d18
+  instrument: OHRC
+  mission: Chandrayaan-2
+  path: data/raw/ohrc/ch2_ohr_ncp_20251010T0942085687_d_img_d18/data/calibrated/20251010/ch2_ohr_ncp_20251010T0942085687_d_img_d18.img
+  source_archive: ISRO ISSDC / PRADAN
+  checksum_sha256: 79330bc1393b708f8f44733b3951c1b02d3371b77e61868f8460a70663382dc5
+  acquisition_date: '2025-10-10'
+  sun_elevation_deg: -0.770711
+  sun_azimuth_deg: 149.773591
+  license_or_terms: ISRO Open Data Policy
+  provided_by_user: true
+  notes: 'Title: Chandrayaan-2 Orbiter OHRC Experiment, Resolution: 0.22m, Lines:
+    101075, Samples: 12000'
+- id: lro_nac_m1529414132le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1529414132LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 0e98f78ac4ef966633b1047d1c0c54a887893e9dc69f9ee4e38b4cd91bcd60cf
+  acquisition_date: '2026-03-29'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1529414132LE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1529414132re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1529414132RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 7a845e6a5b60fb711a15e7222ec1438c4f8a800296df695dba223eca1c39c0e3
+  acquisition_date: '2026-03-29'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1529414132RE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1529421314le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1529421314LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 0ab87eb5511f969f0ef43eca6aed83059a319217555174e0691cb2809a4c651b
+  acquisition_date: '2026-03-29'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1529421314LE, Lines: 26624, Samples: 5064'
+- id: lro_nac_m1529421314re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1529421314RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: ad8adc472353c2814e8ae43430ab8e4c138fead0d1a397732ac30e9def524f19
+  acquisition_date: '2026-03-29'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1529421314RE, Lines: 26624, Samples: 5064'
+- id: lro_nac_m1529428315le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1529428315LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 14fdd81430453ee1e3cfbc54bac6c668ad962fc6b4ebf70cbc85388873bef3e5
+  acquisition_date: '2026-03-29'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1529428315LE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1529428315re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1529428315RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 69b9da402ee7f12472bd7b659c0114564635f6a5efb57a768beff0a6d1edd859
+  acquisition_date: '2026-03-29'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1529428315RE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1531734964le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531734964LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 68e165313fba0a4a573d0e921abe312566b3d90b7995adc154a537f0bac85c07
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531734964LE, Lines: 20480, Samples: 5064'
+- id: lro_nac_m1531734964re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531734964RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 037ceea6387b52291278fe52a7a4a3b68744e260c4a9a7459a12cc3d0abfdf85
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531734964RE, Lines: 20480, Samples: 5064'
+- id: lro_nac_m1531741915re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531741915RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: f2351ac52c746fa14a7b71789b2caac79c76e513c7a70e2525f77d2aa9129d90
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531741915RE, Lines: 30720, Samples: 5064'
+- id: lro_nac_m1531742055le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531742055LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 526a7ee99531518fd918af12f09a5290e867856d49ef5878c8f5153e62fd96a0
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531742055LE, Lines: 31744, Samples: 5064'
+- id: lro_nac_m1531742055re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531742055RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: e48b019c6eb6e2b36ba7efdaffda65aa73ca082b526cc20000f9befa1db998a2
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531742055RE, Lines: 31744, Samples: 5064'
+- id: lro_nac_m1531749024le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531749024LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: da7d26ac5bdc24d8fc3632bab3ff1576d299f881e291cd7bfc1c1612068a0445
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531749024LE, Lines: 41984, Samples: 5064'
+- id: lro_nac_m1531749024re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531749024RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 711126ff27ac8ba362ce7ccb6831e8f83252bad8341953733f9302759e1feb4a
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531749024RE, Lines: 41984, Samples: 5064'
+- id: lro_nac_m1531749182le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531749182LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 5c47bafe50b0c3150048370a9bba47d7e48ba89b3acee457d0834d27ac1b539d
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531749182LE, Lines: 47104, Samples: 5064'
+- id: lro_nac_m1531749182re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531749182RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: e05f356edf92f10c3b728129f9dd24d871b2997d9b2ab8d10ba74b99ff229f96
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531749182RE, Lines: 47104, Samples: 5064'
+- id: lro_nac_m1531756208le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531756208LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 2e7fb6652ee908e9dc818864bdf0d961569cc679803ac1a0b52cf9bb2203cade
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531756208LE, Lines: 40960, Samples: 5064'
+- id: lro_nac_m1531756208re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531756208RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: d0d9879bffccc7c45f5c09167d1d45426a3f247f220c57ffc7c2e3150ad5dbf9
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531756208RE, Lines: 40960, Samples: 5064'
+- id: lro_nac_m1531763325le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531763325LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 3ddf3cb3a390649870a9913e01a4f9bb0ed135bfc5c3be409e7fad291daa1ace
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531763325LE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1531763325re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531763325RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: b6df6c086d6e1914900a7e96e32b0dcb162da93b1deaefde7ce4505c6bb44ba3
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531763325RE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1531770370le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531770370LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: f6579e0fb3542771f5636d8799d6acee86ddf733912b675c220e07b5622fc3a5
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531770370LE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1531770370re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531770370RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 72c943dceb4c4d2ccba771fc9b41864f71d3d40c1749b6e7bbc4e6da84df1db5
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531770370RE, Lines: 52224, Samples: 5064'
+- id: lro_nac_m1531777327le
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531777327LE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: 38575be6454fbd71ae853d7be40d2f949a321c29f87f4bd46d21c8d75dd6fc92
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531777327LE, Lines: 31744, Samples: 5064'
+- id: lro_nac_m1531777327re
+  instrument: NAC
+  mission: LRO
+  path: data/raw/nac_sldem/LRO_NAC/M1531777327RE.IMG
+  source_archive: NASA PDS Imaging Node / ASU LROC
+  checksum_sha256: d58f33c9e31cf4a6a80e5a9a2742193f0902444f4313c1adf6de9341e7e1e547
+  acquisition_date: '2026-04-25'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO NAC EDR Product M1531777327RE, Lines: 31744, Samples: 5064'
+- id: lro_kaguya_sldem2015_map2_equi
+  instrument: SLDEM
+  mission: LRO
+  path: data/raw/nac_sldem/SLDEM/LunarLROLOLAKaguya_MAP2_EQUI.tif
+  source_archive: NASA PDS Geosciences / USGS Astrogeology MAP2
+  checksum_sha256: 2af9d6cd73e67a25551668884b1860f898883590fab2d8174b7b94bb0ffaece3
+  acquisition_date: '2015-01-01'
+  sun_elevation_deg: null
+  sun_azimuth_deg: null
+  license_or_terms: NASA/USGS Open Data Policy (Public Domain)
+  provided_by_user: true
+  notes: 'Title: LRO LOLA + SELENE Kaguya SLDEM2015 Merge 512ppd (59.2m/px), Lat:
+    6-60N, Lon: 93-96E'

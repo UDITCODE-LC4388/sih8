@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  lunar-gcs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: isro-lunar-gcs:latest
+    container_name: isro_lunar_gcs_prod
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - GCS_ENV=production
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - GCS_AUTH_TOKEN=${GCS_AUTH_TOKEN:-}
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

@@ -1,0 +1,64 @@
+{
+  "tile_id": "ch2_tmc_patch_003_r60000_c5000",
+  "grid_resolution_m": 1.0,
+  "elevation_min_m": 967.1881713867188,
+  "elevation_max_m": 1337.4527587890625,
+  "mean_slope_deg": 10.315678596496582,
+  "max_slope_deg": 88.75921630859375,
+  "hazard_coverage_pct": 43.08390808105469,
+  "safe_patch_count_24m": 51526,
+  "rejected_patch_count_24m": 350430,
+  "top_ranked_sites": [
+    {
+      "center_r": 1304,
+      "center_c": 1304,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.8497920632362366,
+      "mean_severity": 0.00047476476174779236,
+      "distance_from_aim_m": 33.94112549695428,
+      "composite_rank_score": 0.03599920560791648
+    },
+    {
+      "center_r": 1308,
+      "center_c": 1300,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.9013656973838806,
+      "mean_severity": 0.0004917366313748062,
+      "distance_from_aim_m": 34.40930106817051,
+      "composite_rank_score": 0.03789423128078137
+    },
+    {
+      "center_r": 1312,
+      "center_c": 1300,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.9065816402435303,
+      "mean_severity": 0.000497609144076705,
+      "distance_from_aim_m": 37.73592452822641,
+      "composite_rank_score": 0.038675766149611046
+    },
+    {
+      "center_r": 1300,
+      "center_c": 1304,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.9599401950836182,
+      "mean_severity": 0.0003870465443469584,
+      "distance_from_aim_m": 31.240998703626616,
+      "composite_rank_score": 0.03933918444551611
+    },
+    {
+      "center_r": 1308,
+      "center_c": 1304,
+      "patch_size_m": 24,
+      "hazard_pixel_count": 0,
+      "mean_slope_deg": 0.9490273594856262,
+      "mean_severity": 0.0007704029558226466,
+      "distance_from_aim_m": 36.87817782917155,
+      "composite_rank_score": 0.040102932106978
+    }
+  ],
+  "trn_package_path": "data/output/ch2_tmc_patch_003_r60000_c5000/trn_reference_package.npz"
+}
