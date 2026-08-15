@@ -385,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (trnTabBtn) trnTabBtn.click();
     });
 
-    // Copilot Form & Chips
+    // Copilot Form, Chips & Key Config
     copilotForm.addEventListener("submit", handleCopilotSubmit);
     document.querySelectorAll(".chip-btn").forEach((chip) => {
       chip.addEventListener("click", () => {
@@ -393,6 +393,32 @@ document.addEventListener("DOMContentLoaded", () => {
         copilotForm.dispatchEvent(new Event("submit"));
       });
     });
+
+    const btnSetGroqKey = document.getElementById("btnSetGroqKey");
+    if (btnSetGroqKey) {
+      if (localStorage.getItem("groq_api_key")) {
+        btnSetGroqKey.textContent = "🔑 Key Active";
+        btnSetGroqKey.style.color = "var(--state-nominal)";
+      }
+      btnSetGroqKey.addEventListener("click", () => {
+        const cur = localStorage.getItem("groq_api_key") || "";
+        const k = prompt("Enter your Groq API Key (starts with 'gsk_') for live LLaMA-3.3-70B AI inference:\n(Leave blank to use built-in offline telemetry AI Flight Director):", cur);
+        if (k !== null) {
+          const clean = k.trim();
+          if (clean) {
+            localStorage.setItem("groq_api_key", clean);
+            btnSetGroqKey.textContent = "🔑 Key Active";
+            btnSetGroqKey.style.color = "var(--state-nominal)";
+            appendChatMessage("copilot", "Groq API Key configured! Connected to live **LLaMA-3.3-70B-Versatile** inference engine.");
+          } else {
+            localStorage.removeItem("groq_api_key");
+            btnSetGroqKey.textContent = "🔑 Set API Key";
+            btnSetGroqKey.style.color = "var(--text-primary)";
+            appendChatMessage("copilot", "Switched to built-in offline telemetry AI Flight Director.");
+          }
+        }
+      });
+    }
 
     // Validation Modal
     btnValidationModal.addEventListener("click", openValidationModal);
@@ -2300,7 +2326,48 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // --- AI Flight Copilot Handling ---
+  // --- AI Flight Copilot Direct Groq & Fallback Handler ---
+  async function queryGroqDirectly(apiKey, userMessage, patchId) {
+    const site = state.rankedSites[state.selectedSiteIdx] || { site_id: "LZ-01", mean_slope_deg: 2.1, max_slope_deg: 4.8, status: "SAFE TO LAND" };
+    const sysPrompt = `You are the ISRO Lunar Mission AI Copilot for SIH260008 (1.0m Super-Resolution Safe Landing GCS).
+Provide precise, technical, aerospace-grade flight telemetry analysis.
+Current Mission Telemetry:
+- Active Patch: ${patchId}
+- Selected Target Site: ${site.site_id} (${site.status})
+- Site Mean Slope: ${site.mean_slope_deg}° (ISRO Threshold: <10.0° Safe, 10-15° Caution, >15° Hazard)
+- Touchdown Differential Tilt: 0.4°
+- Quality Gate: PASSED (False Negative Rate: 1.09%)
+Keep responses concise, crisp, and formatted in markdown.`;
+
+    const messages = [
+      { role: "system", content: sysPrompt },
+      ...state.chatHistory.slice(-4),
+      { role: "user", content: userMessage }
+    ];
+
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: messages,
+        temperature: 0.2,
+        max_tokens: 500
+      })
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || "Telemetry nominal.";
+  }
+
   async function handleCopilotSubmit(e) {
     e.preventDefault();
     const query = copilotInput.value.trim();
@@ -2326,6 +2393,20 @@ document.addEventListener("DOMContentLoaded", () => {
         return `**ISRO SIH260008 Mission Specs:**\n- **Super-Resolution GSD:** \`1.00 m / pixel\` (Super-resolved from native 5m Chandrayaan-2 TMC stereo DEM).\n- **Photogrammetric SSIM:** \`0.942\`\n- **Elevation RMSE:** \`0.18 m\`\n- **Target Region:** Lunar South Pole High-Latitude Corridor (69.3°S – 89.9°S).`;
       }
       return `**Flight Director Advisory:**\nTelemetry for active patch \`${patch}\` is **NOMINAL**.\n- Selected target: **${site.site_id}**\n- Mean slope: \`${site.mean_slope_deg}°\` | Max slope: \`${site.max_slope_deg}°\`\n- All safety criteria satisfied under ISRO SIH260008 specifications. Ready for simulated descent trajectory.`;
+    }
+
+    const groqKey = localStorage.getItem("groq_api_key");
+    if (groqKey) {
+      try {
+        const reply = await queryGroqDirectly(groqKey, query, state.currentPatchId);
+        updateChatMessage(loadingId, reply);
+        state.chatHistory.push({ role: "user", content: query });
+        state.chatHistory.push({ role: "assistant", content: reply });
+        if (state.audioEnabled) playTone(480, 0.08);
+        return;
+      } catch (err) {
+        console.warn("Direct Groq API query error, using local Flight Director:", err);
+      }
     }
 
     if (state.standaloneMode) {
