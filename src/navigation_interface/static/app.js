@@ -503,213 +503,239 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Standalone Simulation & Fallback Engine (for Vercel & Offline CDN) ---
   const FALLBACK_PATCHES = [
     {
-      tile_id: "ch2_tmc_patch_001_manzinus_c",
-      safe_candidates_found: 4,
-      name: "Chandrayaan-2 TMC - Manzinus C (69.3°S, 32.5°E)",
+      tile_id: "ch2_tmc_patch_001_r25000_c4000",
+      safe_candidates_found: 5,
+      name: "Chandrayaan-2 TMC - Manzinus C Sector 1 (69.3°S, 32.5°E)",
       sun_azimuth_deg: 238.2,
       sun_elevation_deg: 39.1,
-      min_elev_m: -3473.0,
-      max_elev_m: -3120.0,
+      min_elev_m: -3424.5,
+      max_elev_m: -2839.6,
       craters: [
         { cx: 0.44, cy: 0.42, r: 0.26, depth: 310, rim: 65 },
         { cx: 0.78, cy: 0.74, r: 0.15, depth: 150, rim: 35 },
         { cx: 0.22, cy: 0.76, r: 0.08, depth: 80, rim: 20 },
-        { cx: 0.82, cy: 0.22, r: 0.07, depth: 70, rim: 18 },
       ],
       sites: [
-        {
-          rank: 1,
-          site_id: "CH2-LZ-01",
-          center_c: 1485,
-          center_r: 896,
-          center_x_1m: 1485,
-          center_y_1m: 896,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.984,
-          mean_slope_deg: 2.1,
-          max_slope_deg: 4.8,
-          elev_relief_m: 0.35,
-          shadow_probability: 0.02,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 0.4,
-          status: "SAFE TO LAND",
-          provenance: "ISRO CH-2 TMC 1m DEM"
-        },
-        {
-          rank: 2,
-          site_id: "CH2-LZ-02",
-          center_c: 896,
-          center_r: 640,
-          center_x_1m: 896,
-          center_y_1m: 640,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.942,
-          mean_slope_deg: 3.4,
-          max_slope_deg: 6.2,
-          elev_relief_m: 0.62,
-          shadow_probability: 0.04,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 0.8,
-          status: "SAFE TO LAND",
-          provenance: "ISRO CH-2 TMC 1m DEM"
-        },
-        {
-          rank: 3,
-          site_id: "CH2-LZ-03",
-          center_c: 1843,
-          center_r: 716,
-          center_x_1m: 1843,
-          center_y_1m: 716,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.895,
-          mean_slope_deg: 4.9,
-          max_slope_deg: 8.1,
-          elev_relief_m: 0.95,
-          shadow_probability: 0.08,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 1.1,
-          status: "SAFE TO LAND",
-          provenance: "ISRO CH-2 TMC 1m DEM"
-        },
-        {
-          rank: 4,
-          site_id: "CH2-LZ-04",
-          center_c: 2099,
-          center_r: 1228,
-          center_x_1m: 2099,
-          center_y_1m: 1228,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.821,
-          mean_slope_deg: 6.8,
-          max_slope_deg: 9.7,
-          elev_relief_m: 1.45,
-          shadow_probability: 0.12,
-          boulder_density_m2: 0.01,
-          touchdown_tilt_deg: 1.9,
-          status: "MARGINAL",
-          provenance: "ISRO CH-2 TMC 1m DEM"
-        }
+        { rank: 1, site_id: "CH2-LZ-01", center_c: 1316, center_r: 1188, center_x_1m: 1316, center_y_1m: 1188, footprint_radius_m: 24.0, confidence_score: 0.985, mean_slope_deg: 0.08, max_slope_deg: 1.2, elev_relief_m: 0.12, shadow_probability: 0.01, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.05, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 2, site_id: "CH2-LZ-02", center_c: 1316, center_r: 1192, center_x_1m: 1316, center_y_1m: 1192, footprint_radius_m: 24.0, confidence_score: 0.982, mean_slope_deg: 0.11, max_slope_deg: 1.5, elev_relief_m: 0.18, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.08, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 3, site_id: "CH2-LZ-03", center_c: 1312, center_r: 1188, center_x_1m: 1312, center_y_1m: 1188, footprint_radius_m: 24.0, confidence_score: 0.981, mean_slope_deg: 0.10, max_slope_deg: 1.4, elev_relief_m: 0.16, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.07, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 4, site_id: "CH2-LZ-04", center_c: 1320, center_r: 1188, center_x_1m: 1320, center_y_1m: 1188, footprint_radius_m: 24.0, confidence_score: 0.979, mean_slope_deg: 0.09, max_slope_deg: 1.3, elev_relief_m: 0.14, shadow_probability: 0.01, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.06, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 5, site_id: "CH2-LZ-05", center_c: 1312, center_r: 1192, center_x_1m: 1312, center_y_1m: 1192, footprint_radius_m: 24.0, confidence_score: 0.978, mean_slope_deg: 0.12, max_slope_deg: 1.7, elev_relief_m: 0.20, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.09, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" }
       ]
     },
     {
-      tile_id: "lro_nac_patch_01_01_boguslawsky",
-      safe_candidates_found: 3,
-      name: "LRO-NAC - Boguslawsky E Rim (72.8°S, 53.2°E)",
+      tile_id: "ch2_tmc_patch_002_r25256_c4000",
+      safe_candidates_found: 5,
+      name: "Chandrayaan-2 TMC - Manzinus C Sector 2 (69.8°S, 32.8°E)",
+      sun_azimuth_deg: 238.5,
+      sun_elevation_deg: 39.0,
+      min_elev_m: -3719.1,
+      max_elev_m: -2952.4,
+      craters: [
+        { cx: 0.55, cy: 0.50, r: 0.30, depth: 380, rim: 80 },
+        { cx: 0.20, cy: 0.30, r: 0.12, depth: 110, rim: 25 },
+        { cx: 0.85, cy: 0.25, r: 0.09, depth: 85, rim: 20 },
+      ],
+      sites: [
+        { rank: 1, site_id: "CH2-02-LZ-01", center_c: 1316, center_r: 1412, center_x_1m: 1316, center_y_1m: 1412, footprint_radius_m: 24.0, confidence_score: 0.952, mean_slope_deg: 0.70, max_slope_deg: 2.1, elev_relief_m: 0.32, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.25, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 2, site_id: "CH2-02-LZ-02", center_c: 1316, center_r: 1408, center_x_1m: 1316, center_y_1m: 1408, footprint_radius_m: 24.0, confidence_score: 0.951, mean_slope_deg: 0.72, max_slope_deg: 2.3, elev_relief_m: 0.35, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.27, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 3, site_id: "CH2-02-LZ-03", center_c: 1312, center_r: 1412, center_x_1m: 1312, center_y_1m: 1412, footprint_radius_m: 24.0, confidence_score: 0.949, mean_slope_deg: 0.73, max_slope_deg: 2.4, elev_relief_m: 0.38, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.29, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 4, site_id: "CH2-02-LZ-04", center_c: 1312, center_r: 1408, center_x_1m: 1312, center_y_1m: 1408, footprint_radius_m: 24.0, confidence_score: 0.947, mean_slope_deg: 0.78, max_slope_deg: 2.6, elev_relief_m: 0.42, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.32, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 5, site_id: "CH2-02-LZ-05", center_c: 1320, center_r: 1408, center_x_1m: 1320, center_y_1m: 1408, footprint_radius_m: 24.0, confidence_score: 0.946, mean_slope_deg: 0.79, max_slope_deg: 2.8, elev_relief_m: 0.45, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.35, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" }
+      ]
+    },
+    {
+      tile_id: "ch2_tmc_patch_003_r60000_c5000",
+      safe_candidates_found: 5,
+      name: "Chandrayaan-2 TMC - Boguslawsky North 1 (71.5°S, 48.2°E)",
+      sun_azimuth_deg: 224.1,
+      sun_elevation_deg: 34.2,
+      min_elev_m: 967.2,
+      max_elev_m: 1337.5,
+      craters: [
+        { cx: 0.38, cy: 0.62, r: 0.28, depth: 220, rim: 50 },
+        { cx: 0.75, cy: 0.30, r: 0.16, depth: 130, rim: 30 },
+      ],
+      sites: [
+        { rank: 1, site_id: "CH2-03-LZ-01", center_c: 1304, center_r: 1304, center_x_1m: 1304, center_y_1m: 1304, footprint_radius_m: 24.0, confidence_score: 0.964, mean_slope_deg: 0.85, max_slope_deg: 2.8, elev_relief_m: 0.40, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.33, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 2, site_id: "CH2-03-LZ-02", center_c: 1300, center_r: 1308, center_x_1m: 1300, center_y_1m: 1308, footprint_radius_m: 24.0, confidence_score: 0.962, mean_slope_deg: 0.90, max_slope_deg: 3.0, elev_relief_m: 0.44, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.36, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 3, site_id: "CH2-03-LZ-03", center_c: 1300, center_r: 1312, center_x_1m: 1300, center_y_1m: 1312, footprint_radius_m: 24.0, confidence_score: 0.961, mean_slope_deg: 0.91, max_slope_deg: 3.1, elev_relief_m: 0.46, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.38, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 4, site_id: "CH2-03-LZ-04", center_c: 1304, center_r: 1300, center_x_1m: 1304, center_y_1m: 1300, footprint_radius_m: 24.0, confidence_score: 0.959, mean_slope_deg: 0.96, max_slope_deg: 3.3, elev_relief_m: 0.50, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.42, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 5, site_id: "CH2-03-LZ-05", center_c: 1304, center_r: 1308, center_x_1m: 1304, center_y_1m: 1308, footprint_radius_m: 24.0, confidence_score: 0.958, mean_slope_deg: 0.95, max_slope_deg: 3.4, elev_relief_m: 0.52, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.44, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" }
+      ]
+    },
+    {
+      tile_id: "ch2_tmc_patch_004_r60256_c5000",
+      safe_candidates_found: 5,
+      name: "Chandrayaan-2 TMC - Boguslawsky Floor (71.9°S, 48.6°E)",
+      sun_azimuth_deg: 224.3,
+      sun_elevation_deg: 34.1,
+      min_elev_m: 1227.8,
+      max_elev_m: 1499.6,
+      craters: [
+        { cx: 0.60, cy: 0.40, r: 0.22, depth: 160, rim: 40 },
+        { cx: 0.25, cy: 0.70, r: 0.15, depth: 110, rim: 28 },
+      ],
+      sites: [
+        { rank: 1, site_id: "CH2-04-LZ-01", center_c: 1296, center_r: 1272, center_x_1m: 1296, center_y_1m: 1272, footprint_radius_m: 24.0, confidence_score: 0.975, mean_slope_deg: 0.63, max_slope_deg: 2.1, elev_relief_m: 0.28, shadow_probability: 0.01, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.22, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 2, site_id: "CH2-04-LZ-02", center_c: 1300, center_r: 1276, center_x_1m: 1300, center_y_1m: 1276, footprint_radius_m: 24.0, confidence_score: 0.974, mean_slope_deg: 0.64, max_slope_deg: 2.2, elev_relief_m: 0.30, shadow_probability: 0.01, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.24, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 3, site_id: "CH2-04-LZ-03", center_c: 1300, center_r: 1272, center_x_1m: 1300, center_y_1m: 1272, footprint_radius_m: 24.0, confidence_score: 0.972, mean_slope_deg: 0.69, max_slope_deg: 2.4, elev_relief_m: 0.34, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.28, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 4, site_id: "CH2-04-LZ-04", center_c: 1304, center_r: 1280, center_x_1m: 1304, center_y_1m: 1280, footprint_radius_m: 24.0, confidence_score: 0.971, mean_slope_deg: 0.68, max_slope_deg: 2.5, elev_relief_m: 0.36, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.30, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 5, site_id: "CH2-04-LZ-05", center_c: 1304, center_r: 1276, center_x_1m: 1304, center_y_1m: 1276, footprint_radius_m: 24.0, confidence_score: 0.970, mean_slope_deg: 0.70, max_slope_deg: 2.6, elev_relief_m: 0.38, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.32, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" }
+      ]
+    },
+    {
+      tile_id: "ch2_tmc_patch_005_r120000_c6000",
+      safe_candidates_found: 5,
+      name: "Chandrayaan-2 TMC - South Pole High Plateau 1 (88.4°S, 120.5°E)",
+      sun_azimuth_deg: 182.0,
+      sun_elevation_deg: 14.5,
+      min_elev_m: -1627.5,
+      max_elev_m: -1225.8,
+      craters: [
+        { cx: 0.48, cy: 0.52, r: 0.25, depth: 240, rim: 60 },
+        { cx: 0.82, cy: 0.72, r: 0.14, depth: 140, rim: 35 },
+      ],
+      sites: [
+        { rank: 1, site_id: "CH2-05-LZ-01", center_c: 1192, center_r: 1212, center_x_1m: 1192, center_y_1m: 1212, footprint_radius_m: 24.0, confidence_score: 0.955, mean_slope_deg: 0.72, max_slope_deg: 2.5, elev_relief_m: 0.35, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.28, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 2, site_id: "CH2-05-LZ-02", center_c: 1092, center_r: 1264, center_x_1m: 1092, center_y_1m: 1264, footprint_radius_m: 24.0, confidence_score: 0.954, mean_slope_deg: 0.35, max_slope_deg: 1.8, elev_relief_m: 0.22, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.15, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 3, site_id: "CH2-05-LZ-03", center_c: 1096, center_r: 1264, center_x_1m: 1096, center_y_1m: 1264, footprint_radius_m: 24.0, confidence_score: 0.953, mean_slope_deg: 0.39, max_slope_deg: 2.0, elev_relief_m: 0.25, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.18, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 4, site_id: "CH2-05-LZ-04", center_c: 1096, center_r: 1260, center_x_1m: 1096, center_y_1m: 1260, footprint_radius_m: 24.0, confidence_score: 0.951, mean_slope_deg: 0.46, max_slope_deg: 2.2, elev_relief_m: 0.28, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.21, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 5, site_id: "CH2-05-LZ-05", center_c: 1188, center_r: 1212, center_x_1m: 1188, center_y_1m: 1212, footprint_radius_m: 24.0, confidence_score: 0.950, mean_slope_deg: 0.82, max_slope_deg: 2.9, elev_relief_m: 0.40, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.35, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" }
+      ]
+    },
+    {
+      tile_id: "ch2_tmc_patch_006_r120256_c6000",
+      safe_candidates_found: 5,
+      name: "Chandrayaan-2 TMC - South Pole Shackleton Ridge 2 (89.2°S, 135.2°E)",
+      sun_azimuth_deg: 181.8,
+      sun_elevation_deg: 14.2,
+      min_elev_m: -1601.5,
+      max_elev_m: -1209.4,
+      craters: [
+        { cx: 0.50, cy: 0.45, r: 0.32, depth: 270, rim: 70 },
+        { cx: 0.22, cy: 0.68, r: 0.14, depth: 120, rim: 30 },
+      ],
+      sites: [
+        { rank: 1, site_id: "CH2-06-LZ-01", center_c: 1216, center_r: 1336, center_x_1m: 1216, center_y_1m: 1336, footprint_radius_m: 24.0, confidence_score: 0.956, mean_slope_deg: 0.82, max_slope_deg: 2.7, elev_relief_m: 0.38, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.32, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 2, site_id: "CH2-06-LZ-02", center_c: 1212, center_r: 1340, center_x_1m: 1212, center_y_1m: 1340, footprint_radius_m: 24.0, confidence_score: 0.954, mean_slope_deg: 0.83, max_slope_deg: 2.8, elev_relief_m: 0.40, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.34, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 3, site_id: "CH2-06-LZ-03", center_c: 1220, center_r: 1332, center_x_1m: 1220, center_y_1m: 1332, footprint_radius_m: 24.0, confidence_score: 0.954, mean_slope_deg: 0.89, max_slope_deg: 3.0, elev_relief_m: 0.42, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.37, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 4, site_id: "CH2-06-LZ-04", center_c: 1216, center_r: 1340, center_x_1m: 1216, center_y_1m: 1340, footprint_radius_m: 24.0, confidence_score: 0.953, mean_slope_deg: 0.87, max_slope_deg: 3.1, elev_relief_m: 0.45, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.39, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" },
+        { rank: 5, site_id: "CH2-06-LZ-05", center_c: 1220, center_r: 1336, center_x_1m: 1220, center_y_1m: 1336, footprint_radius_m: 24.0, confidence_score: 0.952, mean_slope_deg: 0.93, max_slope_deg: 3.2, elev_relief_m: 0.48, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.42, status: "SAFE TO LAND", provenance: "ISRO CH-2 TMC 1m DEM" }
+      ]
+    },
+    {
+      tile_id: "lro_nac_patch_01_01_m1529414132re_r8000",
+      safe_candidates_found: 4,
+      name: "LRO-NAC - Boguslawsky E Rim 1 (72.8°S, 53.2°E)",
       sun_azimuth_deg: 215.0,
       sun_elevation_deg: 28.5,
-      min_elev_m: -3950.0,
-      max_elev_m: -3380.0,
+      min_elev_m: -3416.6,
+      max_elev_m: -1763.8,
       craters: [
         { cx: 0.52, cy: 0.48, r: 0.32, depth: 420, rim: 95 },
         { cx: 0.18, cy: 0.25, r: 0.12, depth: 120, rim: 30 },
-        { cx: 0.80, cy: 0.35, r: 0.10, depth: 95, rim: 25 },
       ],
       sites: [
-        {
-          rank: 1,
-          site_id: "LRO-LZ-01",
-          center_c: 1280,
-          center_r: 1800,
-          center_x_1m: 1280,
-          center_y_1m: 1800,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.965,
-          mean_slope_deg: 2.8,
-          max_slope_deg: 5.4,
-          elev_relief_m: 0.48,
-          shadow_probability: 0.03,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 0.6,
-          status: "SAFE TO LAND",
-          provenance: "LRO NAC 0.5m Ortho & Shading Fusion"
-        },
-        {
-          rank: 2,
-          site_id: "LRO-LZ-02",
-          center_c: 650,
-          center_r: 1500,
-          center_x_1m: 650,
-          center_y_1m: 1500,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.918,
-          mean_slope_deg: 4.2,
-          max_slope_deg: 7.6,
-          elev_relief_m: 0.85,
-          shadow_probability: 0.06,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 1.0,
-          status: "SAFE TO LAND",
-          provenance: "LRO NAC 0.5m Ortho & Shading Fusion"
-        },
-        {
-          rank: 3,
-          site_id: "LRO-LZ-03",
-          center_c: 1950,
-          center_r: 1750,
-          center_x_1m: 1950,
-          center_y_1m: 1750,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.862,
-          mean_slope_deg: 5.7,
-          max_slope_deg: 9.1,
-          elev_relief_m: 1.20,
-          shadow_probability: 0.10,
-          boulder_density_m2: 0.01,
-          touchdown_tilt_deg: 1.5,
-          status: "SAFE TO LAND",
-          provenance: "LRO NAC 0.5m Ortho & Shading Fusion"
-        }
+        { rank: 1, site_id: "LRO-01-LZ-01", center_c: 1968, center_r: 2316, center_x_1m: 1968, center_y_1m: 2316, footprint_radius_m: 24.0, confidence_score: 0.885, mean_slope_deg: 3.49, max_slope_deg: 6.8, elev_relief_m: 0.85, shadow_probability: 0.05, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.95, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" },
+        { rank: 2, site_id: "LRO-01-LZ-02", center_c: 1964, center_r: 2316, center_x_1m: 1964, center_y_1m: 2316, footprint_radius_m: 24.0, confidence_score: 0.881, mean_slope_deg: 3.65, max_slope_deg: 7.1, elev_relief_m: 0.92, shadow_probability: 0.06, boulder_density_m2: 0.00, touchdown_tilt_deg: 1.02, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" },
+        { rank: 3, site_id: "LRO-01-LZ-03", center_c: 1964, center_r: 2320, center_x_1m: 1964, center_y_1m: 2320, footprint_radius_m: 24.0, confidence_score: 0.879, mean_slope_deg: 3.68, max_slope_deg: 7.3, elev_relief_m: 0.95, shadow_probability: 0.06, boulder_density_m2: 0.00, touchdown_tilt_deg: 1.05, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" },
+        { rank: 4, site_id: "LRO-01-LZ-04", center_c: 1960, center_r: 2316, center_x_1m: 1960, center_y_1m: 2316, footprint_radius_m: 24.0, confidence_score: 0.875, mean_slope_deg: 3.99, max_slope_deg: 7.8, elev_relief_m: 1.05, shadow_probability: 0.07, boulder_density_m2: 0.00, touchdown_tilt_deg: 1.15, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" }
       ]
     },
     {
-      tile_id: "ch2_tmc_patch_003_south_pole_ridge",
-      safe_candidates_found: 2,
-      name: "Lunar South Pole Ridge (89.9°S - PSR Corridor)",
-      sun_azimuth_deg: 182.0,
-      sun_elevation_deg: 12.0,
-      min_elev_m: -4200.0,
-      max_elev_m: -3450.0,
+      tile_id: "lro_nac_patch_01_02_m1529414132re_r16000",
+      safe_candidates_found: 3,
+      name: "LRO-NAC - Boguslawsky South Corridor 2 (73.2°S, 53.6°E)",
+      sun_azimuth_deg: 215.3,
+      sun_elevation_deg: 28.2,
+      min_elev_m: 284.8,
+      max_elev_m: 1711.1,
       craters: [
-        { cx: 0.35, cy: 0.60, r: 0.30, depth: 550, rim: 120 },
-        { cx: 0.70, cy: 0.30, r: 0.22, depth: 380, rim: 80 },
+        { cx: 0.42, cy: 0.58, r: 0.28, depth: 360, rim: 85 },
+        { cx: 0.78, cy: 0.35, r: 0.16, depth: 150, rim: 35 },
       ],
       sites: [
-        {
-          rank: 1,
-          site_id: "SP-LZ-01",
-          center_c: 1600,
-          center_r: 1400,
-          center_x_1m: 1600,
-          center_y_1m: 1400,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.951,
-          mean_slope_deg: 3.1,
-          max_slope_deg: 5.8,
-          elev_relief_m: 0.55,
-          shadow_probability: 0.05,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 0.7,
-          status: "SAFE TO LAND",
-          provenance: "ISRO CH-2 Polar Illumination DEM"
-        },
-        {
-          rank: 2,
-          site_id: "SP-LZ-02",
-          center_c: 1100,
-          center_r: 700,
-          center_x_1m: 1100,
-          center_y_1m: 700,
-          footprint_radius_m: 24.0,
-          confidence_score: 0.887,
-          mean_slope_deg: 5.2,
-          max_slope_deg: 8.5,
-          elev_relief_m: 1.10,
-          shadow_probability: 0.09,
-          boulder_density_m2: 0.00,
-          touchdown_tilt_deg: 1.3,
-          status: "SAFE TO LAND",
-          provenance: "ISRO CH-2 Polar Illumination DEM"
-        }
+        { rank: 1, site_id: "LRO-02-LZ-01", center_c: 1450, center_r: 1680, center_x_1m: 1450, center_y_1m: 1680, footprint_radius_m: 24.0, confidence_score: 0.912, mean_slope_deg: 4.12, max_slope_deg: 7.4, elev_relief_m: 0.98, shadow_probability: 0.06, boulder_density_m2: 0.00, touchdown_tilt_deg: 1.12, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" },
+        { rank: 2, site_id: "LRO-02-LZ-02", center_c: 1480, center_r: 1710, center_x_1m: 1480, center_y_1m: 1710, footprint_radius_m: 24.0, confidence_score: 0.898, mean_slope_deg: 4.65, max_slope_deg: 8.2, elev_relief_m: 1.15, shadow_probability: 0.08, boulder_density_m2: 0.00, touchdown_tilt_deg: 1.30, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" },
+        { rank: 3, site_id: "LRO-02-LZ-03", center_c: 1410, center_r: 1650, center_x_1m: 1410, center_y_1m: 1650, footprint_radius_m: 24.0, confidence_score: 0.884, mean_slope_deg: 5.10, max_slope_deg: 8.9, elev_relief_m: 1.32, shadow_probability: 0.09, boulder_density_m2: 0.00, touchdown_tilt_deg: 1.45, status: "SAFE TO LAND", provenance: "LRO NAC High-Resolution DEM" }
+      ]
+    },
+    {
+      tile_id: "lro_nac_patch_02_01_m1529428315le_r8000",
+      safe_candidates_found: 4,
+      name: "LRO-NAC - Amundsen Crater Outer Rim 1 (84.1°S, 85.3°E)",
+      sun_azimuth_deg: 195.4,
+      sun_elevation_deg: 18.2,
+      min_elev_m: -4120.0,
+      max_elev_m: -3500.0,
+      craters: [
+        { cx: 0.35, cy: 0.55, r: 0.30, depth: 400, rim: 90 },
+        { cx: 0.72, cy: 0.28, r: 0.18, depth: 180, rim: 45 },
+      ],
+      sites: [
+        { rank: 1, site_id: "AMU-01-LZ-01", center_c: 1520, center_r: 1120, center_x_1m: 1520, center_y_1m: 1120, footprint_radius_m: 24.0, confidence_score: 0.942, mean_slope_deg: 2.15, max_slope_deg: 4.8, elev_relief_m: 0.42, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.45, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 2, site_id: "AMU-01-LZ-02", center_c: 1560, center_r: 1140, center_x_1m: 1560, center_y_1m: 1140, footprint_radius_m: 24.0, confidence_score: 0.938, mean_slope_deg: 2.45, max_slope_deg: 5.2, elev_relief_m: 0.48, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.52, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 3, site_id: "AMU-01-LZ-03", center_c: 1480, center_r: 1090, center_x_1m: 1480, center_y_1m: 1090, footprint_radius_m: 24.0, confidence_score: 0.925, mean_slope_deg: 2.90, max_slope_deg: 5.9, elev_relief_m: 0.58, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.65, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 4, site_id: "AMU-01-LZ-04", center_c: 1540, center_r: 1180, center_x_1m: 1540, center_y_1m: 1180, footprint_radius_m: 24.0, confidence_score: 0.910, mean_slope_deg: 3.40, max_slope_deg: 6.5, elev_relief_m: 0.72, shadow_probability: 0.05, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.78, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" }
+      ]
+    },
+    {
+      tile_id: "lro_nac_patch_02_02_m1529428315le_r16000",
+      safe_candidates_found: 5,
+      name: "LRO-NAC - Amundsen Crater Central Floor 2 (84.5°S, 85.8°E)",
+      sun_azimuth_deg: 195.6,
+      sun_elevation_deg: 18.0,
+      min_elev_m: -4080.0,
+      max_elev_m: -3480.0,
+      craters: [
+        { cx: 0.65, cy: 0.35, r: 0.25, depth: 320, rim: 75 },
+        { cx: 0.28, cy: 0.75, r: 0.15, depth: 130, rim: 30 },
+      ],
+      sites: [
+        { rank: 1, site_id: "AMU-02-LZ-01", center_c: 1280, center_r: 1350, center_x_1m: 1280, center_y_1m: 1350, footprint_radius_m: 24.0, confidence_score: 0.968, mean_slope_deg: 1.45, max_slope_deg: 3.2, elev_relief_m: 0.30, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.28, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 2, site_id: "AMU-02-LZ-02", center_c: 1310, center_r: 1380, center_x_1m: 1310, center_y_1m: 1380, footprint_radius_m: 24.0, confidence_score: 0.962, mean_slope_deg: 1.62, max_slope_deg: 3.5, elev_relief_m: 0.34, shadow_probability: 0.02, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.32, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 3, site_id: "AMU-02-LZ-03", center_c: 1250, center_r: 1320, center_x_1m: 1250, center_y_1m: 1320, footprint_radius_m: 24.0, confidence_score: 0.958, mean_slope_deg: 1.78, max_slope_deg: 3.8, elev_relief_m: 0.38, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.36, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 4, site_id: "AMU-02-LZ-04", center_c: 1340, center_r: 1390, center_x_1m: 1340, center_y_1m: 1390, footprint_radius_m: 24.0, confidence_score: 0.951, mean_slope_deg: 1.95, max_slope_deg: 4.2, elev_relief_m: 0.42, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.40, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" },
+        { rank: 5, site_id: "AMU-02-LZ-05", center_c: 1220, center_r: 1290, center_x_1m: 1220, center_y_1m: 1290, footprint_radius_m: 24.0, confidence_score: 0.947, mean_slope_deg: 2.10, max_slope_deg: 4.6, elev_relief_m: 0.45, shadow_probability: 0.03, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.44, status: "SAFE TO LAND", provenance: "LRO NAC Polar Stereographic DEM" }
+      ]
+    },
+    {
+      tile_id: "lro_nac_patch_03_01_m1529428315re_r8000",
+      safe_candidates_found: 4,
+      name: "LRO-NAC - Shoemaker Crater Rim PSR 1 (88.1°S, 45.2°E)",
+      sun_azimuth_deg: 184.2,
+      sun_elevation_deg: 11.8,
+      min_elev_m: -4250.0,
+      max_elev_m: -3610.0,
+      craters: [
+        { cx: 0.50, cy: 0.50, r: 0.35, depth: 490, rim: 110 },
+        { cx: 0.15, cy: 0.70, r: 0.14, depth: 140, rim: 32 },
+      ],
+      sites: [
+        { rank: 1, site_id: "SHOE-01-LZ-01", center_c: 1650, center_r: 1420, center_x_1m: 1650, center_y_1m: 1420, footprint_radius_m: 24.0, confidence_score: 0.932, mean_slope_deg: 2.80, max_slope_deg: 5.6, elev_relief_m: 0.55, shadow_probability: 0.06, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.62, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" },
+        { rank: 2, site_id: "SHOE-01-LZ-02", center_c: 1690, center_r: 1460, center_x_1m: 1690, center_y_1m: 1460, footprint_radius_m: 24.0, confidence_score: 0.924, mean_slope_deg: 3.15, max_slope_deg: 6.2, elev_relief_m: 0.62, shadow_probability: 0.07, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.70, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" },
+        { rank: 3, site_id: "SHOE-01-LZ-03", center_c: 1610, center_r: 1380, center_x_1m: 1610, center_y_1m: 1380, footprint_radius_m: 24.0, confidence_score: 0.915, mean_slope_deg: 3.52, max_slope_deg: 6.8, elev_relief_m: 0.70, shadow_probability: 0.08, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.78, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" },
+        { rank: 4, site_id: "SHOE-01-LZ-04", center_c: 1720, center_r: 1500, center_x_1m: 1720, center_y_1m: 1500, footprint_radius_m: 24.0, confidence_score: 0.902, mean_slope_deg: 4.10, max_slope_deg: 7.6, elev_relief_m: 0.85, shadow_probability: 0.09, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.92, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" }
+      ]
+    },
+    {
+      tile_id: "lro_nac_patch_03_02_m1529428315re_r16000",
+      safe_candidates_found: 4,
+      name: "LRO-NAC - Faustini Ridge Sunlight Peak 2 (87.3°S, 77.0°E)",
+      sun_azimuth_deg: 184.5,
+      sun_elevation_deg: 11.5,
+      min_elev_m: -4190.0,
+      max_elev_m: -3550.0,
+      craters: [
+        { cx: 0.40, cy: 0.60, r: 0.26, depth: 380, rim: 85 },
+        { cx: 0.75, cy: 0.32, r: 0.18, depth: 190, rim: 45 },
+      ],
+      sites: [
+        { rank: 1, site_id: "FAUST-02-LZ-01", center_c: 1350, center_r: 1250, center_x_1m: 1350, center_y_1m: 1250, footprint_radius_m: 24.0, confidence_score: 0.948, mean_slope_deg: 1.95, max_slope_deg: 4.2, elev_relief_m: 0.38, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.42, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" },
+        { rank: 2, site_id: "FAUST-02-LZ-02", center_c: 1380, center_r: 1280, center_x_1m: 1380, center_y_1m: 1280, footprint_radius_m: 24.0, confidence_score: 0.941, mean_slope_deg: 2.20, max_slope_deg: 4.6, elev_relief_m: 0.45, shadow_probability: 0.04, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.48, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" },
+        { rank: 3, site_id: "FAUST-02-LZ-03", center_c: 1320, center_r: 1220, center_x_1m: 1320, center_y_1m: 1220, footprint_radius_m: 24.0, confidence_score: 0.932, mean_slope_deg: 2.65, max_slope_deg: 5.3, elev_relief_m: 0.52, shadow_probability: 0.05, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.58, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" },
+        { rank: 4, site_id: "FAUST-02-LZ-04", center_c: 1410, center_r: 1310, center_x_1m: 1410, center_y_1m: 1310, footprint_radius_m: 24.0, confidence_score: 0.920, mean_slope_deg: 3.10, max_slope_deg: 6.0, elev_relief_m: 0.65, shadow_probability: 0.06, boulder_density_m2: 0.00, touchdown_tilt_deg: 0.68, status: "SAFE TO LAND", provenance: "LRO NAC South Pole Stereo DEM" }
       ]
     }
   ];
@@ -1787,6 +1813,8 @@ document.addEventListener("DOMContentLoaded", () => {
         patch_id: state.currentPatchId,
         total_dist_m: parseFloat(totalDistM.toFixed(1)),
         relief_m: parseFloat(reliefM.toFixed(1)),
+        min_elev_m: minElev,
+        max_elev_m: maxElev,
         max_slope_deg: parseFloat(maxSlope.toFixed(1)),
         mean_slope_deg: parseFloat(meanSlope.toFixed(1)),
         is_safe: isSafe,
@@ -1864,16 +1892,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = state.transect.data;
     if (!data || !data.elevations || data.elevations.length < 2) return;
 
-    const w = transectCanvas.width;
-    const h = transectCanvas.height;
+    const w = transectCanvas.width || transectCanvas.clientWidth || 600;
+    const h = transectCanvas.height || transectCanvas.clientHeight || 135;
     const padding = { top: 14, right: 40, bottom: 24, left: 52 };
     const chartW = w - padding.left - padding.right;
     const chartH = h - padding.top - padding.bottom;
 
     const elevs = data.elevations;
     const n = elevs.length;
-    const minE = data.min_elev_m;
-    const maxE = data.max_elev_m;
+    let minE = data.min_elev_m !== undefined ? data.min_elev_m : Math.min(...elevs);
+    let maxE = data.max_elev_m !== undefined ? data.max_elev_m : Math.max(...elevs);
+    if (minE === maxE) {
+      minE -= 5.0;
+      maxE += 5.0;
+    }
     const rangeE = Math.max(1.0, maxE - minE);
 
     // Grid lines
@@ -1900,12 +1932,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ctxTransect.closePath();
 
     const grad = ctxTransect.createLinearGradient(0, padding.top, 0, padding.top + chartH);
-    grad.addColorStop(0, "rgba(94, 193, 217, 0.28)");
-    grad.addColorStop(1, "rgba(94, 193, 217, 0.0)");
+    grad.addColorStop(0, "rgba(94, 193, 217, 0.35)");
+    grad.addColorStop(1, "rgba(94, 193, 217, 0.02)");
     ctxTransect.fillStyle = grad;
     ctxTransect.fill();
 
-    // Elevation Stroke
+    // Elevation Stroke Line
     ctxTransect.beginPath();
     for (let i = 0; i < n; i++) {
       const x = padding.left + (i / (n - 1)) * chartW;
@@ -1914,14 +1946,14 @@ document.addEventListener("DOMContentLoaded", () => {
       else ctxTransect.lineTo(x, y);
     }
     ctxTransect.strokeStyle = "#5EC1D9";
-    ctxTransect.lineWidth = 1.5;
+    ctxTransect.lineWidth = 2;
     ctxTransect.stroke();
 
-    // Slope Threshold Line
+    // Slope Hazard Limit Line (10°)
     ctxTransect.save();
     ctxTransect.strokeStyle = "rgba(242, 169, 59, 0.7)";
     ctxTransect.lineWidth = 1;
-    ctxTransect.setLineDash([3, 3]);
+    ctxTransect.setLineDash([4, 4]);
     const slopeThresholdY = padding.top + chartH * 0.35;
     ctxTransect.beginPath();
     ctxTransect.moveTo(padding.left, slopeThresholdY);
@@ -1930,15 +1962,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ctxTransect.restore();
 
     // Axis Labels
-    ctxTransect.font = "500 9px 'IBM Plex Mono'";
+    ctxTransect.font = "500 10px 'IBM Plex Mono'";
     ctxTransect.fillStyle = "#9AA1AF";
     ctxTransect.textAlign = "right";
-    ctxTransect.fillText(`${maxE.toFixed(0)}m`, padding.left - 6, padding.top + 8);
+    ctxTransect.fillText(`${maxE.toFixed(0)}m`, padding.left - 6, padding.top + 10);
     ctxTransect.fillText(`${minE.toFixed(0)}m`, padding.left - 6, padding.top + chartH);
 
     ctxTransect.textAlign = "center";
-    ctxTransect.fillText("0m", padding.left, h - 6);
-    ctxTransect.fillText(`${data.total_dist_m}m`, padding.left + chartW, h - 6);
+    ctxTransect.fillText("0m (A)", padding.left, h - 6);
+    ctxTransect.fillText(`${data.total_dist_m}m (B)`, padding.left + chartW, h - 6);
   }
 
   // --- Three.js 3D Interactive Topography Mesh ---
