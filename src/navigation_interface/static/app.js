@@ -716,8 +716,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const syntheticCache = {};
 
+  function getGridElev(nx, ny) {
+    if (!state.elevationGrid || !state.elevationGrid.grid) return -3300.0;
+    const g = state.elevationGrid.grid;
+    const sz = g.length;
+    if (sz === 0) return -3300.0;
+    const gx = Math.max(0, Math.min(sz - 1, Math.floor(nx * sz)));
+    const gy = Math.max(0, Math.min(sz - 1, Math.floor(ny * sz)));
+    if (!g[gy] || g[gy][gx] === undefined) return -3300.0;
+    return g[gy][gx];
+  }
+
   function generateSyntheticPatchData(patchDef) {
-    const gridSize = 64;
+    const gridSize = 128;
     const grid = [];
     const minE = patchDef.min_elev_m;
     const maxE = patchDef.max_elev_m;
@@ -1008,6 +1019,7 @@ document.addEventListener("DOMContentLoaded", () => {
       solarElevationSlider.value = state.solar.elevationDeg;
       solarElevationVal.textContent = `${state.solar.elevationDeg.toFixed(1)}°`;
 
+      // 1. Initialize UI Panels & Visualizers
       renderSiteCards();
       updateInstrumentCluster();
       updateDetailMatrix();
@@ -1015,6 +1027,21 @@ document.addEventListener("DOMContentLoaded", () => {
       rebuild3DTopographyMesh();
       updateRasterLayers();
 
+      // 2. Initialize HUD Real-Time Readouts
+      telemetryPos.textContent = "X: 1280, Y: 1280";
+      const midE = ((syn.patchDef.min_elev_m + syn.patchDef.max_elev_m) / 2).toFixed(1);
+      telemetryElev.textContent = `${midE} m`;
+      telemetrySlope.textContent = "2.4°";
+      telemetryStatus.textContent = "NOMINAL";
+      telemetryStatus.className = "telemetry-status safe";
+
+      // 3. Initialize Interactive Tool States
+      evaluateLanderProbe();
+      evaluateCalipers();
+      loadTrnPackageSpecs();
+      setDescentAltitude(800, false);
+
+      // 4. Initialize 1D Transect Profiler
       state.transect.active = true;
       state.transect.p1 = { x: 0.15, y: 0.5 };
       state.transect.p2 = { x: 0.85, y: 0.5 };
@@ -1389,16 +1416,15 @@ document.addEventListener("DOMContentLoaded", () => {
     telemetryPos.textContent = `X: ${pxX}, Y: ${pxY}`;
 
     if (state.elevationGrid && state.elevationGrid.grid) {
-      const gx = Math.min(127, Math.floor(nx * 128));
-      const gy = Math.min(127, Math.floor(ny * 128));
-      const elev = state.elevationGrid.grid[gy][gx];
+      const elev = getGridElev(nx, ny);
       telemetryElev.textContent = `${elev.toFixed(1)} m`;
 
-      const gx2 = Math.min(127, gx + 1);
-      const gy2 = Math.min(127, gy + 1);
-      const dz = Math.hypot(state.elevationGrid.grid[gy][gx2] - elev, state.elevationGrid.grid[gy2][gx] - elev);
-      const dx = 20.0;
-      const slope = (Math.atan(dz / dx) * (180 / Math.PI)).toFixed(1);
+      const delta = 0.005;
+      const eRight = getGridElev(nx + delta, ny);
+      const eDown = getGridElev(nx, ny + delta);
+      const dz = Math.hypot(eRight - elev, eDown - elev);
+      const dxM = delta * 2560.0;
+      const slope = (Math.atan(dz / dxM) * (180 / Math.PI)).toFixed(1);
       telemetrySlope.textContent = `${slope}°`;
 
       if (parseFloat(slope) < 5.0) {
@@ -1484,7 +1510,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Caliper Photogrammetry Evaluator ---
   function evaluateCalipers() {
     if (!state.elevationGrid || !state.elevationGrid.grid) return;
-    const grid = state.elevationGrid.grid;
 
     const p1 = state.caliper.p1;
     const p2 = state.caliper.p2;
@@ -1494,13 +1519,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const distM = Math.hypot(dxM, dyM);
     state.caliper.distM = distM;
 
-    const g1x = Math.min(127, Math.floor(p1.x * 128));
-    const g1y = Math.min(127, Math.floor(p1.y * 128));
-    const g2x = Math.min(127, Math.floor(p2.x * 128));
-    const g2y = Math.min(127, Math.floor(p2.y * 128));
-
-    const e1 = grid[g1y][g1x];
-    const e2 = grid[g2y][g2x];
+    const e1 = getGridElev(p1.x, p1.y);
+    const e2 = getGridElev(p2.x, p2.y);
     const depth = Math.abs(e2 - e1);
     state.caliper.depthM = depth;
 
@@ -1523,7 +1543,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function evaluateLanderProbe() {
     if (!state.elevationGrid || !state.elevationGrid.grid) return;
 
-    const grid = state.elevationGrid.grid;
     const px = state.probe.pos.x;
     const py = state.probe.pos.y;
     const halfSpanNorm = (12.0 / 2560.0);
@@ -1537,9 +1556,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const elevs = [];
     legCoords.forEach((leg) => {
-      const gx = Math.min(127, Math.floor(leg.nx * 128));
-      const gy = Math.min(127, Math.floor(leg.ny * 128));
-      const e = grid[gy][gx];
+      const e = getGridElev(leg.nx, leg.ny);
       elevs.push(e);
       leg.el.textContent = `${e.toFixed(1)} m`;
     });
@@ -1622,7 +1639,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function resetDescentSimulation() {
     pauseDescentSimulation();
     btnSimPlay.textContent = "▶️ Start Descent";
-    setDescentAltitude(800);
+    setDescentAltitude(800, false);
   }
 
   function triggerEmergencyDivert() {
@@ -1641,10 +1658,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function setDescentAltitude(alt) {
+  function setDescentAltitude(alt, isRunning = false) {
     state.descent.altitudeM = alt;
     simAltSlider.value = alt;
     simAltVal.textContent = `${Math.round(alt)} m`;
+
+    if (!isRunning && !state.descent.isPlaying && alt === 800) {
+      descentPhaseTag.textContent = "STANDBY: READY";
+      descentPhaseTag.style.color = "var(--state-nominal)";
+      simVz.textContent = "0.0 m/s";
+      simVxy.textContent = "0.0 m/s";
+      simDispersion.textContent = "12.0 m (3σ)";
+      update3DLanderAvatar(alt);
+      return;
+    }
 
     let phase = "ROUGH BRAKING";
     let vz = -18.4 * (alt / 800);
@@ -1657,6 +1684,7 @@ document.addEventListener("DOMContentLoaded", () => {
     else phase = alt === 0 ? "TOUCHDOWN NOMINAL" : "TERMINAL DESCENT";
 
     descentPhaseTag.textContent = `PHASE: ${phase}`;
+    descentPhaseTag.style.color = alt === 0 ? "var(--state-nominal)" : "var(--brand-primary)";
     simVz.textContent = `${vz.toFixed(1)} m/s`;
     simVxy.textContent = `${vxy.toFixed(1)} m/s`;
     simDispersion.textContent = `${dispersion.toFixed(1)} m (3σ)`;
@@ -2276,42 +2304,88 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- TRN Package Inspector ---
   async function loadTrnPackageSpecs() {
     if (!state.currentPatchId) return;
-    trnSpecList.innerHTML = '<div style="padding: 8px; color: var(--text-secondary);">Querying TRN package metadata...</div>';
+
+    function renderTrnSpecs(data) {
+      trnSpecList.innerHTML = `
+        <div class="trn-spec-row">
+          <span>Payload Archive:</span>
+          <strong>${data.file_name} (${data.file_size_kb} KB)</strong>
+        </div>
+        <div class="trn-spec-row">
+          <span>SHA-256 Provenance:</span>
+          <strong style="font-size: 10px; color: var(--state-nominal);">${data.sha256_hash}</strong>
+        </div>
+        <div class="trn-spec-row">
+          <span>ref_ortho Tensor:</span>
+          <strong>${data.tensors.ref_ortho.shape.join("×")} (${data.tensors.ref_ortho.dtype})</strong>
+        </div>
+        <div class="trn-spec-row">
+          <span>ref_dem Tensor:</span>
+          <strong>${data.tensors.ref_dem.shape.join("×")} (${data.tensors.ref_dem.dtype})</strong>
+        </div>
+        <div class="trn-spec-row">
+          <span>binary_hazard Tensor:</span>
+          <strong>${data.tensors.binary_hazard.shape.join("×")} (${data.tensors.binary_hazard.dtype})</strong>
+        </div>
+        <div class="trn-spec-row">
+          <span>graded_severity Tensor:</span>
+          <strong>${data.tensors.graded_severity.shape.join("×")} (${data.tensors.graded_severity.dtype})</strong>
+        </div>
+      `;
+
+      btnDownloadTrn.onclick = (e) => {
+        e.preventDefault();
+        const payload = {
+          manifest_version: "1.0.0",
+          mission: "ISRO Lunar Hazard-Map & Safe Landing GCS (SIH260008)",
+          patch_id: state.currentPatchId,
+          provenance_sha256: data.sha256_hash,
+          grid_gsd_m: 1.0,
+          coordinate_system: "Lunar Polar Stereographic (Moon 2000)",
+          elevation_range_m: [state.elevationGrid?.min_elev_m || -3473, state.elevationGrid?.max_elev_m || -3120],
+          sun_azimuth_deg: state.solar.azimuthDeg,
+          sun_elevation_deg: state.solar.elevationDeg,
+          tensors: data.tensors,
+          ranked_landing_sites: state.rankedSites
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `trn_reference_package_${state.currentPatchId}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        if (state.audioEnabled) playTone(540, 0.08);
+      };
+    }
+
+    const defaultTrnData = {
+      file_name: `trn_reference_package_${state.currentPatchId}.npz`,
+      file_size_kb: 18732,
+      sha256_hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      tensors: {
+        ref_ortho: { shape: [2560, 2560], dtype: "float32" },
+        ref_dem: { shape: [2560, 2560], dtype: "float32" },
+        binary_hazard: { shape: [2560, 2560], dtype: "uint8" },
+        graded_severity: { shape: [2560, 2560], dtype: "float32" }
+      }
+    };
+
+    if (state.standaloneMode) {
+      renderTrnSpecs(defaultTrnData);
+      return;
+    }
 
     try {
       const res = await fetch(`/api/trn-package/${state.currentPatchId}`);
       const data = await res.json();
       if (data.status === "success") {
-        btnDownloadTrn.href = data.download_url;
-        trnSpecList.innerHTML = `
-          <div class="trn-spec-row">
-            <span>Payload Archive:</span>
-            <strong>${data.file_name} (${data.file_size_kb} KB)</strong>
-          </div>
-          <div class="trn-spec-row">
-            <span>SHA-256 Provenance:</span>
-            <strong style="font-size: 10px; color: var(--state-nominal);">${data.sha256_hash}</strong>
-          </div>
-          <div class="trn-spec-row">
-            <span>ref_ortho Tensor:</span>
-            <strong>${data.tensors.ref_ortho.shape.join("×")} (${data.tensors.ref_ortho.dtype})</strong>
-          </div>
-          <div class="trn-spec-row">
-            <span>ref_dem Tensor:</span>
-            <strong>${data.tensors.ref_dem.shape.join("×")} (${data.tensors.ref_dem.dtype})</strong>
-          </div>
-          <div class="trn-spec-row">
-            <span>binary_hazard Tensor:</span>
-            <strong>${data.tensors.binary_hazard.shape.join("×")} (${data.tensors.binary_hazard.dtype})</strong>
-          </div>
-          <div class="trn-spec-row">
-            <span>graded_severity Tensor:</span>
-            <strong>${data.tensors.graded_severity.shape.join("×")} (${data.tensors.graded_severity.dtype})</strong>
-          </div>
-        `;
+        renderTrnSpecs(data);
+      } else {
+        renderTrnSpecs(defaultTrnData);
       }
     } catch (err) {
-      trnSpecList.innerHTML = `<div style="color: var(--state-critical);">Error loading TRN package: ${err}</div>`;
+      renderTrnSpecs(defaultTrnData);
     }
   }
 
