@@ -403,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSetGroqKey = document.getElementById("btnSetGroqKey");
     if (btnSetGroqKey) {
       if (localStorage.getItem("groq_api_key")) {
-        btnSetGroqKey.textContent = "🔑 Key Active";
+        btnSetGroqKey.textContent = "Key Active";
         btnSetGroqKey.style.color = "var(--state-nominal)";
       }
       btnSetGroqKey.addEventListener("click", () => {
@@ -413,12 +413,12 @@ document.addEventListener("DOMContentLoaded", () => {
           const clean = k.trim();
           if (clean) {
             localStorage.setItem("groq_api_key", clean);
-            btnSetGroqKey.textContent = "🔑 Key Active";
+            btnSetGroqKey.textContent = "Key Active";
             btnSetGroqKey.style.color = "var(--state-nominal)";
-            appendChatMessage("copilot", "Groq API Key configured! Connected to live **LLaMA-3.3-70B-Versatile** inference engine.");
+            appendChatMessage("copilot", "Groq API Key configured. Connected to live LLaMA-3.3-70B-Versatile inference engine.");
           } else {
             localStorage.removeItem("groq_api_key");
-            btnSetGroqKey.textContent = "🔑 Set API Key";
+            btnSetGroqKey.textContent = "Set API Key";
             btnSetGroqKey.style.color = "var(--text-primary)";
             appendChatMessage("copilot", "Switched to built-in offline telemetry AI Flight Director.");
           }
@@ -1635,7 +1635,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startDescentSimulation() {
     state.descent.isPlaying = true;
-    btnSimPlay.textContent = "⏸️ Pause Descent";
+    btnSimPlay.textContent = "Pause Descent";
     if (state.audioEnabled) {
       speakCallout("Commencing lunar landing terminal descent sequence. Optical TRN tracking active.");
     }
@@ -1655,7 +1655,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function pauseDescentSimulation() {
     state.descent.isPlaying = false;
-    btnSimPlay.textContent = "▶️ Resume Descent";
+    btnSimPlay.textContent = "Resume Descent";
     if (state.descent.timerId) {
       clearInterval(state.descent.timerId);
       state.descent.timerId = null;
@@ -1664,7 +1664,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resetDescentSimulation() {
     pauseDescentSimulation();
-    btnSimPlay.textContent = "▶️ Start Descent";
+    btnSimPlay.textContent = "Start Descent";
     setDescentAltitude(800, false);
   }
 
