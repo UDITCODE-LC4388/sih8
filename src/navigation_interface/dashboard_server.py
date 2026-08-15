@@ -241,6 +241,12 @@ class GCSRequestHandler(SimpleHTTPRequestHandler):
                     except Exception:
                         pass
 
+        for p in patches:
+            top_sites = p.get("top_ranked_sites", [])
+            safe_count = len(top_sites) if top_sites else (5 if p.get("safe_patch_count_24m", 0) > 0 else 0)
+            p["safe_candidates_found"] = safe_count
+            p["safe_sites_count"] = safe_count
+
         self.send_json_response({"status": "success", "total": len(patches), "patches": patches})
 
     def handle_get_patch_details(self, patch_id: str):
@@ -375,7 +381,7 @@ class GCSRequestHandler(SimpleHTTPRequestHandler):
 
             elif layer == "slope":
                 dem = pkg["ref_dem"].astype(np.float32)
-                slope_grid = compute_horn_slope(dem, resolution=1.0)
+                slope_grid = compute_horn_slope(dem, cell_size_meters=1.0)
                 h, w = slope_grid.shape
                 rgba = np.zeros((h, w, 4), dtype=np.uint8)
                 caution_mask = (slope_grid > 5.0) & (slope_grid <= 10.0)
@@ -446,7 +452,7 @@ class GCSRequestHandler(SimpleHTTPRequestHandler):
 
             pkg = np.load(pkg_path, allow_pickle=True)
             dem = pkg["ref_dem"].astype(np.float32)
-            slope_grid = compute_horn_slope(dem, resolution=1.0)
+            slope_grid = compute_horn_slope(dem, cell_size_meters=1.0)
             h, w = dem.shape
 
             px1 = np.clip(x1 * w, 0, w - 1)

@@ -1018,7 +1018,8 @@ document.addEventListener("DOMContentLoaded", () => {
         data.patches.forEach((p) => {
           const opt = document.createElement("option");
           opt.value = p.tile_id || p.patch_id;
-          opt.textContent = `${p.tile_id || p.patch_id} (${p.safe_candidates_found ?? p.safe_sites_count ?? 0} sites)`;
+          const siteCount = p.safe_candidates_found ?? (p.top_ranked_sites ? p.top_ranked_sites.length : (p.safe_sites_count ?? (p.safe_patch_count_24m > 0 ? 5 : 0)));
+          opt.textContent = `${p.tile_id || p.patch_id} (${siteCount} sites)`;
           patchSelector.appendChild(opt);
         });
 
