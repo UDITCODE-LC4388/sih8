@@ -34,6 +34,20 @@ class LunarMissionChatbot:
         temperature: float = 0.2,
     ):
         self.api_key = api_key or os.environ.get("GROQ_API_KEY", "")
+        if not self.api_key:
+            env_path = PROJECT_ROOT / ".env"
+            if env_path.exists():
+                try:
+                    with open(env_path, "r", encoding="utf-8") as f:
+                        for line in f:
+                            line = line.strip()
+                            if line.startswith("GROQ_API_KEY=") and not line.startswith("#"):
+                                self.api_key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                                if self.api_key:
+                                    break
+                except Exception:
+                    pass
+
         self.model = model
         self.temperature = temperature
         self.conversation_history: List[Dict[str, str]] = []
