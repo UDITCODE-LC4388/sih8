@@ -151,11 +151,11 @@
           <!-- 2D Canvas Stack Container -->
           <div class="viewport-2d" id="viewport2D">
             <div class="canvas-stack" id="canvasStack">
-              <img id="rasterUnderlay" class="raster-underlay" alt="Ortho Underlay" />
-              <img id="rasterOverlay" class="raster-overlay" alt="Active Layer Overlay" />
+              <canvas id="rasterUnderlay" class="raster-underlay" width="512" height="512"></canvas>
+              <canvas id="rasterOverlay" class="raster-overlay" width="512" height="512"></canvas>
               <!-- Split Comparison Curtain Underlay (5m Raw) -->
-              <img id="rasterCurtain" class="raster-curtain hidden" alt="5m Raw Sensor Layer" />
-              <canvas id="interactionCanvas" class="interaction-canvas"></canvas>
+              <canvas id="rasterCurtain" class="raster-curtain hidden" width="512" height="512"></canvas>
+              <canvas id="interactionCanvas" class="interaction-canvas" width="512" height="512"></canvas>
             </div>
           </div>
 

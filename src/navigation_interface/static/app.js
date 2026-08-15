@@ -218,6 +218,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupCanvas() {
+    rasterUnderlay.width = 512;
+    rasterUnderlay.height = 512;
+    rasterOverlay.width = 512;
+    rasterOverlay.height = 512;
+    rasterCurtain.width = 512;
+    rasterCurtain.height = 512;
     interactionCanvas.width = 512;
     interactionCanvas.height = 512;
     transectCanvas.width = transectCanvas.clientWidth || 600;
@@ -438,7 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (tool === "curtain") {
       rasterCurtain.classList.remove("hidden");
-      rasterCurtain.src = `/api/raster/${state.currentPatchId}/lr_ortho`;
+      updateRasterLayers();
       updateCurtainClip(state.curtainX);
     } else {
       rasterCurtain.classList.add("hidden");
@@ -1069,32 +1075,70 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateRasterLayers() {
     if (!state.currentPatchId) return;
 
+    const ctxUnderlay = rasterUnderlay.getContext("2d");
+    const ctxOverlay = rasterOverlay.getContext("2d");
+    const ctxCurtain = rasterCurtain.getContext("2d");
+
+    rasterOverlay.style.opacity = state.overlayOpacity;
+
     if (state.standaloneMode) {
       const syn = getOrGeneratePatch(state.currentPatchId);
-      rasterUnderlay.src = syn.urls.ortho;
-      rasterOverlay.src = syn.urls[state.currentLayer] || syn.urls.dem;
-      rasterOverlay.style.opacity = state.overlayOpacity;
+      
+      // 1. Draw Ortho Underlay Canvas
+      ctxUnderlay.clearRect(0, 0, 512, 512);
+      ctxUnderlay.drawImage(syn.canvases.ortho, 0, 0, 512, 512);
 
+      // 2. Draw Active Layer Overlay Canvas
+      ctxOverlay.clearRect(0, 0, 512, 512);
+      const activeCanvas = syn.canvases[state.currentLayer] || syn.canvases.dem;
+      ctxOverlay.drawImage(activeCanvas, 0, 0, 512, 512);
+
+      // 3. Draw Curtain Layer (5m Raw baseline)
       if (state.activeTool === "curtain") {
-        rasterCurtain.src = syn.urls.lr_ortho;
+        ctxCurtain.clearRect(0, 0, 512, 512);
+        ctxCurtain.drawImage(syn.canvases.lr_ortho, 0, 0, 512, 512);
         updateCurtainClip(state.curtainX);
       }
       render2DOverlay();
       return;
     }
 
-    rasterUnderlay.src = `/api/raster/${state.currentPatchId}/ortho`;
-    rasterOverlay.src = `/api/raster/${state.currentPatchId}/${state.currentLayer}`;
-    rasterOverlay.style.opacity = state.overlayOpacity;
-
-    rasterUnderlay.onerror = () => {
+    // Live Server Mode: load images asynchronously and draw to canvas
+    const imgUnderlay = new Image();
+    imgUnderlay.crossOrigin = "anonymous";
+    imgUnderlay.onload = () => {
+      ctxUnderlay.clearRect(0, 0, 512, 512);
+      ctxUnderlay.drawImage(imgUnderlay, 0, 0, 512, 512);
+      render2DOverlay();
+    };
+    imgUnderlay.onerror = () => {
       state.standaloneMode = true;
       updateRasterLayers();
     };
+    imgUnderlay.src = `/api/raster/${state.currentPatchId}/ortho`;
+
+    const imgOverlay = new Image();
+    imgOverlay.crossOrigin = "anonymous";
+    imgOverlay.onload = () => {
+      ctxOverlay.clearRect(0, 0, 512, 512);
+      ctxOverlay.drawImage(imgOverlay, 0, 0, 512, 512);
+      render2DOverlay();
+    };
+    imgOverlay.onerror = () => {
+      state.standaloneMode = true;
+      updateRasterLayers();
+    };
+    imgOverlay.src = `/api/raster/${state.currentPatchId}/${state.currentLayer}`;
 
     if (state.activeTool === "curtain") {
-      rasterCurtain.src = `/api/raster/${state.currentPatchId}/lr_ortho`;
-      updateCurtainClip(state.curtainX);
+      const imgCurtain = new Image();
+      imgCurtain.crossOrigin = "anonymous";
+      imgCurtain.onload = () => {
+        ctxCurtain.clearRect(0, 0, 512, 512);
+        ctxCurtain.drawImage(imgCurtain, 0, 0, 512, 512);
+        updateCurtainClip(state.curtainX);
+      };
+      imgCurtain.src = `/api/raster/${state.currentPatchId}/lr_ortho`;
     }
 
     render2DOverlay();
