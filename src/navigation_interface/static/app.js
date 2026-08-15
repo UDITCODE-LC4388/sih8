@@ -141,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const gaugeSlopeArc = document.getElementById("gaugeSlopeArc");
   const gaugeRoughnessVal = document.getElementById("gaugeRoughnessVal");
   const gaugeRoughnessArc = document.getElementById("gaugeRoughnessArc");
+  const gaugeDeltaVSub = document.getElementById("gaugeDeltaVSub");
   const gaugeSunVal = document.getElementById("gaugeSunVal");
   const gaugeSunArc = document.getElementById("gaugeSunArc");
 
@@ -520,6 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "ch2_tmc_patch_001_r25000_c4000",
       safe_candidates_found: 5,
       name: "Chandrayaan-2 TMC - Manzinus C Sector 1 (69.3°S, 32.5°E)",
+      sha256_hash: "010ae21c69a6a78c57710237442082359d00e9b7ed54167d2477cff16c8a5ad1",
       sun_azimuth_deg: 238.2,
       sun_elevation_deg: 39.1,
       min_elev_m: -3424.5,
@@ -541,6 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "ch2_tmc_patch_002_r25256_c4000",
       safe_candidates_found: 5,
       name: "Chandrayaan-2 TMC - Manzinus C Sector 2 (69.8°S, 32.8°E)",
+      sha256_hash: "ca1831e26f8df5add7f24ab15ad93c8680e34158cc118fc665e10beff77457c6",
       sun_azimuth_deg: 238.5,
       sun_elevation_deg: 39.0,
       min_elev_m: -3719.1,
@@ -562,6 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "ch2_tmc_patch_003_r60000_c5000",
       safe_candidates_found: 5,
       name: "Chandrayaan-2 TMC - Boguslawsky North 1 (71.5°S, 48.2°E)",
+      sha256_hash: "68eac2b0e69a3a1b99b83db41fc3d90acf350ed7c8d01fb5d0d0d48a40b0e3b1",
       sun_azimuth_deg: 224.1,
       sun_elevation_deg: 34.2,
       min_elev_m: 967.2,
@@ -582,6 +586,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "ch2_tmc_patch_004_r60256_c5000",
       safe_candidates_found: 5,
       name: "Chandrayaan-2 TMC - Boguslawsky Floor (71.9°S, 48.6°E)",
+      sha256_hash: "38642eb36564aa0fa68f19b8e7e1c7223e7ca7cdb7f7ca12a806f950263b50f5",
       sun_azimuth_deg: 224.3,
       sun_elevation_deg: 34.1,
       min_elev_m: 1227.8,
@@ -602,6 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "ch2_tmc_patch_005_r120000_c6000",
       safe_candidates_found: 5,
       name: "Chandrayaan-2 TMC - South Pole High Plateau 1 (88.4°S, 120.5°E)",
+      sha256_hash: "c80cc3ac120d314f9ab2a5b19bd1c00af595cd961765d3526df1d94728bfcf6e",
       sun_azimuth_deg: 182.0,
       sun_elevation_deg: 14.5,
       min_elev_m: -1627.5,
@@ -622,6 +628,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "ch2_tmc_patch_006_r120256_c6000",
       safe_candidates_found: 5,
       name: "Chandrayaan-2 TMC - South Pole Shackleton Ridge 2 (89.2°S, 135.2°E)",
+      sha256_hash: "999ed62f8c8350d0e64c6d3319d5ba3994cadcf85b1aaeea0b6493e020b80808",
       sun_azimuth_deg: 181.8,
       sun_elevation_deg: 14.2,
       min_elev_m: -1601.5,
@@ -642,6 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "lro_nac_patch_01_01_m1529414132re_r8000",
       safe_candidates_found: 4,
       name: "LRO-NAC - Boguslawsky E Rim 1 (72.8°S, 53.2°E)",
+      sha256_hash: "c8072a63a04f201e43f362f187f20f72fafd2c8af0b4b3928034282fbf94dcf8",
       sun_azimuth_deg: 215.0,
       sun_elevation_deg: 28.5,
       min_elev_m: -3416.6,
@@ -661,6 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "lro_nac_patch_01_02_m1529414132re_r16000",
       safe_candidates_found: 3,
       name: "LRO-NAC - Boguslawsky South Corridor 2 (73.2°S, 53.6°E)",
+      sha256_hash: "ca669fc8dec5d412b31f3a501dfd12de4fae70823b66e8ada656aa36e9a41ba5",
       sun_azimuth_deg: 215.3,
       sun_elevation_deg: 28.2,
       min_elev_m: 284.8,
@@ -679,6 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "lro_nac_patch_02_01_m1529428315le_r8000",
       safe_candidates_found: 4,
       name: "LRO-NAC - Amundsen Crater Outer Rim 1 (84.1°S, 85.3°E)",
+      sha256_hash: "79aea7e82a9ee639ff68bd030902404c9aff39f33da274af307c4a40c0755e4b",
       sun_azimuth_deg: 195.4,
       sun_elevation_deg: 18.2,
       min_elev_m: -4120.0,
@@ -698,6 +708,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "lro_nac_patch_02_02_m1529428315le_r16000",
       safe_candidates_found: 5,
       name: "LRO-NAC - Amundsen Crater Central Floor 2 (84.5°S, 85.8°E)",
+      sha256_hash: "fe03dd1590be941b621bfb91db85292a9da48748f211e4a129cbf4808499f9de",
       sun_azimuth_deg: 195.6,
       sun_elevation_deg: 18.0,
       min_elev_m: -4080.0,
@@ -718,6 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "lro_nac_patch_03_01_m1529428315re_r8000",
       safe_candidates_found: 4,
       name: "LRO-NAC - Shoemaker Crater Rim PSR 1 (88.1°S, 45.2°E)",
+      sha256_hash: "bdf6e6a3862154e6de36c87dd0ca1da85c15533ccfb56b202a48c7849d165c38",
       sun_azimuth_deg: 184.2,
       sun_elevation_deg: 11.8,
       min_elev_m: -4250.0,
@@ -737,6 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tile_id: "lro_nac_patch_03_02_m1529428315re_r16000",
       safe_candidates_found: 4,
       name: "LRO-NAC - Faustini Ridge Sunlight Peak 2 (87.3°S, 77.0°E)",
+      sha256_hash: "a063c9253ad346befaed49361ad1a06364971b499118161dff7a7b5e76b54587",
       sun_azimuth_deg: 184.5,
       sun_elevation_deg: 11.5,
       min_elev_m: -4190.0,
@@ -2273,8 +2286,12 @@ document.addEventListener("DOMContentLoaded", () => {
       gaugeSlopeVal.style.color = "var(--state-critical)";
     }
 
-    const dist = site.distance_from_aim_m !== undefined ? site.distance_from_aim_m : (site.roughness_ra_m || 0.14);
-    gaugeRoughnessVal.textContent = site.distance_from_aim_m !== undefined ? `${dist.toFixed(0)} m` : `${dist.toFixed(2)} m`;
+    const dist = site.distance_from_aim_m !== undefined ? site.distance_from_aim_m : 98.8;
+    gaugeRoughnessVal.textContent = `${dist.toFixed(1)} m`;
+    if (gaugeDeltaVSub) {
+      const deltaV = (dist * 0.018).toFixed(2);
+      gaugeDeltaVSub.textContent = `ΔV Penalty: +${deltaV} m/s`;
+    }
 
     const sunEl = state.elevationGrid ? state.elevationGrid.sun_elevation_deg : 39.1;
     gaugeSunVal.textContent = `${sunEl.toFixed(1)}°`;
@@ -2405,10 +2422,13 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
+    const curPatch = FALLBACK_PATCHES.find(p => p.tile_id === state.currentPatchId) || FALLBACK_PATCHES[0];
+    const realHash = curPatch.sha256_hash || "010ae21c69a6a78c57710237442082359d00e9b7ed54167d2477cff16c8a5ad1";
+
     const defaultTrnData = {
       file_name: `trn_reference_package_${state.currentPatchId}.npz`,
       file_size_kb: 18732,
-      sha256_hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      sha256_hash: realHash,
       tensors: {
         ref_ortho: { shape: [2560, 2560], dtype: "float32" },
         ref_dem: { shape: [2560, 2560], dtype: "float32" },
