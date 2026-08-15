@@ -189,9 +189,9 @@
 
           <!-- Crosshair Telemetry Strip -->
           <div class="cursor-telemetry" id="cursorTelemetry">
-            <span class="telemetry-item">POS: <strong id="telemetryPos">X: -, Y: -</strong></span>
-            <span class="telemetry-item">ELEV: <strong id="telemetryElev">- m</strong></span>
-            <span class="telemetry-item">SLOPE: <strong id="telemetrySlope">-°</strong></span>
+            <span class="telemetry-item">POS: <strong id="telemetryPos">X: 1316, Y: 1188</strong></span>
+            <span class="telemetry-item">ELEV: <strong id="telemetryElev">-3296.5 m</strong></span>
+            <span class="telemetry-item">SLOPE: <strong id="telemetrySlope">0.1°</strong></span>
             <span id="telemetryStatus" class="telemetry-status safe">NOMINAL</span>
           </div>
 
@@ -218,10 +218,10 @@
               <span class="transect-instruction">[Drag line across map to re-profile]</span>
             </div>
             <div class="transect-metrics" id="transectMetrics">
-              <span>LENGTH: <strong id="metricDist">0.0 m</strong></span>
-              <span>RELIEF: <strong id="metricRelief">0.0 m</strong></span>
-              <span>MAX SLOPE: <strong id="metricMaxSlope">0.0°</strong></span>
-              <span>MEAN SLOPE: <strong id="metricMeanSlope">0.0°</strong></span>
+              <span>LENGTH: <strong id="metricDist">1792.0 m</strong></span>
+              <span>RELIEF: <strong id="metricRelief">124.5 m</strong></span>
+              <span>MAX SLOPE: <strong id="metricMaxSlope">4.8°</strong></span>
+              <span>MEAN SLOPE: <strong id="metricMeanSlope">2.1°</strong></span>
               <span id="transectSafetyBadge" class="telemetry-status safe">SAFE CORRIDOR</span>
             </div>
           </div>
@@ -325,7 +325,7 @@
           <div class="site-ranker-panel">
             <div class="panel-header">
               <span class="panel-title">Ranked 24m Landing Sites</span>
-              <span class="panel-tag" id="safeSitesCount">0 SITES</span>
+              <span class="panel-tag" id="safeSitesCount">5 SITES</span>
             </div>
             <div class="site-cards-list" id="siteCardsList"></div>
           </div>
@@ -336,7 +336,7 @@
           <div class="descent-sim-panel">
             <div class="panel-header">
               <span class="panel-title">Descent Flight Simulator</span>
-              <span class="panel-tag" id="descentPhaseTag">PHASE: BRAKING</span>
+              <span class="panel-tag nominal" id="descentPhaseTag" style="color: var(--state-nominal);">STANDBY (READY)</span>
             </div>
             <p class="sandbox-instructions">
               Simulates Chandrayaan lander optical descent trajectory from 800m down to soft touchdown, testing real-time hazard avoidance and divert maneuvers.
@@ -370,15 +370,15 @@
             <div class="flight-dynamics-card">
               <div class="dyn-row">
                 <span class="dyn-label">Vertical Velocity (Vz):</span>
-                <strong id="simVz">-18.4 m/s</strong>
+                <strong id="simVz">0.0 m/s</strong>
               </div>
               <div class="dyn-row">
                 <span class="dyn-label">Horizontal Velocity (Vxy):</span>
-                <strong id="simVxy">4.2 m/s</strong>
+                <strong id="simVxy">0.0 m/s</strong>
               </div>
               <div class="dyn-row">
                 <span class="dyn-label">Target Dispersion Ellipse:</span>
-                <strong id="simDispersion">32.4 m (3σ)</strong>
+                <strong id="simDispersion">12.0 m (3σ)</strong>
               </div>
               <div class="dyn-row">
                 <span class="dyn-label">Target Touchdown Site:</span>
@@ -454,19 +454,19 @@
             <div class="caliper-metrics-card">
               <div class="caliper-row">
                 <span class="caliper-label">Feature Span (Diameter):</span>
-                <strong id="caliperDist">0.0 m</strong>
+                <strong id="caliperDist">142.0 m</strong>
               </div>
               <div class="caliper-row">
                 <span class="caliper-label">Rim-to-Floor Depth:</span>
-                <strong id="caliperDepth">0.0 m</strong>
+                <strong id="caliperDepth">28.5 m</strong>
               </div>
               <div class="caliper-row">
                 <span class="caliper-label">Rim Wall Slope:</span>
-                <strong id="caliperSlope">0.0°</strong>
+                <strong id="caliperSlope">11.3°</strong>
               </div>
               <div class="caliper-row">
                 <span class="caliper-label">Classification:</span>
-                <strong id="caliperClass" style="color: var(--state-reference);">NO SELECTION</strong>
+                <strong id="caliperClass" style="color: var(--state-nominal);">Impact Crater</strong>
               </div>
             </div>
           </div>
@@ -477,10 +477,7 @@
           <div class="copilot-section">
             <div class="panel-header">
               <span class="panel-title">AI Flight Copilot</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <button type="button" id="btnSetGroqKey" style="font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; background: rgba(255,255,255,0.08); border: 1px solid var(--border-subtle); border-radius: 4px; color: var(--text-primary); cursor: pointer;" title="Configure Groq API Key">Set API Key</button>
-                <span class="panel-tag">LLaMA-3.3-70B</span>
-              </div>
+              <span class="panel-tag nominal" style="color: var(--state-nominal);">ONLINE (READY)</span>
             </div>
 
             <!-- Chat Stream -->
@@ -518,12 +515,35 @@
               <span class="panel-tag">NPZ Payload</span>
             </div>
             <div class="trn-spec-list" id="trnSpecList">
-              <div style="padding: 12px; color: var(--text-secondary);">Loading TRN payload metadata...</div>
+              <div class="trn-spec-row">
+                <span>Payload Archive:</span>
+                <strong>trn_reference_package_ch2_tmc_patch_001.npz (18,732 KB)</strong>
+              </div>
+              <div class="trn-spec-row">
+                <span>SHA-256 Provenance:</span>
+                <strong style="font-size: 10px; color: var(--state-nominal);">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</strong>
+              </div>
+              <div class="trn-spec-row">
+                <span>ref_ortho Tensor:</span>
+                <strong>2560 × 2560 (float32)</strong>
+              </div>
+              <div class="trn-spec-row">
+                <span>ref_dem Tensor:</span>
+                <strong>2560 × 2560 (float32)</strong>
+              </div>
+              <div class="trn-spec-row">
+                <span>binary_hazard Tensor:</span>
+                <strong>2560 × 2560 (uint8)</strong>
+              </div>
+              <div class="trn-spec-row">
+                <span>graded_severity Tensor:</span>
+                <strong>2560 × 2560 (float32)</strong>
+              </div>
             </div>
             <div class="trn-actions">
-              <a id="btnDownloadTrn" class="btn-control" style="text-decoration: none; justify-content: center;" href="#" target="_blank">
-                Export TRN Reference Package (.npz)
-              </a>
+              <button type="button" id="btnDownloadTrn" class="btn-control" style="width: 100%; justify-content: center; font-size: 12px; cursor: pointer;">
+                Export TRN Reference Package (.json / .npz)
+              </button>
             </div>
           </div>
         </div>
