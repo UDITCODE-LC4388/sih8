@@ -235,6 +235,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Event Listeners Setup ---
   function setupEventListeners() {
+    // Global user gesture unlock for Web Audio & Speech Synthesis
+    const unlockHandler = () => {
+      unlockAudio();
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.getVoices();
+      }
+    };
+    document.addEventListener("click", unlockHandler, { once: true, passive: true });
+    document.addEventListener("touchstart", unlockHandler, { once: true, passive: true });
+    document.addEventListener("keydown", unlockHandler, { once: true, passive: true });
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
     window.addEventListener("resize", () => {
       transectCanvas.width = transectCanvas.clientWidth || 600;
       transectCanvas.height = transectCanvas.clientHeight || 135;
@@ -380,6 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Audio Toggle
     btnAudioToggle.addEventListener("click", () => {
+      unlockAudio();
       state.audioEnabled = !state.audioEnabled;
       const iconOn = document.getElementById("audioIconOn");
       const iconOff = document.getElementById("audioIconOff");
@@ -390,9 +408,11 @@ document.addEventListener("DOMContentLoaded", () => {
       audioStatusText.textContent = state.audioEnabled ? "Audio ON" : "Audio OFF";
       btnAudioToggle.classList.toggle("active", state.audioEnabled);
       if (state.audioEnabled) {
-        playTone(640, 0.08);
-        speakCallout("Tactical audio enabled.");
+        playTone(520, 0.08, "sine", 0.22);
+        setTimeout(() => playTone(680, 0.12, "sine", 0.22), 90);
+        speakCallout("Tactical audio enabled. Mission voice online.");
       } else {
+        playTone(340, 0.12, "sine", 0.18);
         if ("speechSynthesis" in window) {
           window.speechSynthesis.cancel();
         }
@@ -2986,39 +3006,77 @@ Keep responses concise, crisp, and formatted in markdown.`;
 
   // --- Tactical Audio Engine ---
   let sharedAudioCtx = null;
+  let activeUtterances = [];
 
-  function playTone(freq = 440, duration = 0.1) {
-    if (!state.audioEnabled) return;
+  function unlockAudio() {
     try {
       if (!sharedAudioCtx) {
-        sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) {
+          sharedAudioCtx = new AudioCtxClass();
+        }
       }
-      if (sharedAudioCtx.state === "suspended") {
+      if (sharedAudioCtx && sharedAudioCtx.state === "suspended") {
         sharedAudioCtx.resume();
       }
+      if ("speechSynthesis" in window && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+    } catch (e) {}
+  }
+
+  function playTone(freq = 440, duration = 0.12, type = "sine", volume = 0.20) {
+    if (!state.audioEnabled) return;
+    try {
+      unlockAudio();
+      if (!sharedAudioCtx) return;
+
+      const now = sharedAudioCtx.currentTime;
       const osc = sharedAudioCtx.createOscillator();
       const gain = sharedAudioCtx.createGain();
 
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.05, sharedAudioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, sharedAudioCtx.currentTime + duration);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(volume, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
       osc.connect(gain);
       gain.connect(sharedAudioCtx.destination);
-      osc.start();
-      osc.stop(sharedAudioCtx.currentTime + duration);
+      osc.start(now);
+      osc.stop(now + duration);
     } catch (e) {}
   }
 
   function speakCallout(phrase) {
     if (!state.audioEnabled || !("speechSynthesis" in window)) return;
     try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.rate = 1.05;
-      utterance.pitch = 0.95;
-      window.speechSynthesis.speak(utterance);
+      unlockAudio();
+
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+      }
+
+      setTimeout(() => {
+        if (!state.audioEnabled) return;
+        const utterance = new SpeechSynthesisUtterance(phrase);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        const voices = window.speechSynthesis.getVoices();
+        if (voices && voices.length > 0) {
+          const engVoice = voices.find(v => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Samantha") || v.name.includes("Daniel") || v.name.includes("Karen") || v.name.includes("Alex"))) || voices.find(v => v.lang.startsWith("en"));
+          if (engVoice) utterance.voice = engVoice;
+        }
+
+        activeUtterances.push(utterance);
+        utterance.onend = utterance.onerror = () => {
+          activeUtterances = activeUtterances.filter(u => u !== utterance);
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }, 60);
     } catch (e) {}
   }
 
