@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.GROQ_API_KEY || Buffer.from("Z3NrX3Nib0dsR0R2QTdpTzNidE0xT3ZqV0dkeWIwRllDZHhpQ3lQMm41aU5wckdkYXlZbFNlSmI=", "base64").toString("utf-8");
 
-    const sysPrompt = `You are the official ISRO Lunar Mission AI Copilot for SIH260008 (Planetary Remote Sensing & Safe Lunar Landing GCS).
+    const sysPrompt = `You are the official LunarX Lunar Mission AI Copilot for SIH260008 (Planetary Remote Sensing & Safe Lunar Landing GCS).
 Current Active Patch: ${active_patch_id}
 Key Flight Thresholds:
 - Maximum Safe Slope: < 10.0° (ISRO Vikram Lander limit)

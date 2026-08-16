@@ -33,7 +33,12 @@ from src.common.logging import logger
 from src.common.config import load_config
 from src.sr_engine.models.image_sr import ImageSRGenerator, ImageDiscriminator
 from src.sr_engine.models.dem_sr import DEMSRGenerator
-from src.sr_engine.losses import SlopeConsistencyLoss, ShadingConsistencyLoss, RelativisticAdversarialLoss
+from src.sr_engine.losses import (
+    ElevationRangeAnchorLoss,
+    SlopeConsistencyLoss,
+    ShadingConsistencyLoss,
+    RelativisticAdversarialLoss,
+)
 
 CHECKPOINTS_DIR = PROJECT_ROOT / "checkpoints"
 
@@ -109,7 +114,7 @@ def run_training_stage(
     allow_data_gap: bool = True,
 ) -> int:
     """
-    Executes SR training loop under real data constraints.
+    Executes SR training loop under real data constraints with anti-hallucination guardrails.
     """
     logger.info(f"===========================================================")
     logger.info(f" Initiating Super-Resolution Training: Stage {stage}")
@@ -147,8 +152,9 @@ def run_training_stage(
     dem_gen = DEMSRGenerator().to(device)
     img_disc = ImageDiscriminator().to(device)
 
-    # Loss Functions
-    slope_loss_fn = SlopeConsistencyLoss(cell_size_meters=1.0).to(device)
+    # Loss Functions with Anti-Inflation Constraints
+    anchor_loss_fn = ElevationRangeAnchorLoss().to(device)
+    slope_loss_fn = SlopeConsistencyLoss(cell_size_meters=1.0, max_slope_deg=35.0).to(device)
     shading_loss_fn = ShadingConsistencyLoss(cell_size_meters=1.0).to(device)
     ragan_loss_fn = RelativisticAdversarialLoss()
 
@@ -156,11 +162,11 @@ def run_training_stage(
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=False)
 
     if stage == "A":
-        # Stage A: Reconstruction & Slope Pretraining
-        opt_dem = torch.optim.Adam(dem_gen.parameters(), lr=2e-4, betas=(0.9, 0.999), weight_decay=1e-4)
-        opt_img = torch.optim.Adam(img_gen.parameters(), lr=2e-4, betas=(0.9, 0.999), weight_decay=1e-4)
-        sched_dem = torch.optim.lr_scheduler.CosineAnnealingLR(opt_dem, T_max=num_epochs)
-        sched_img = torch.optim.lr_scheduler.CosineAnnealingLR(opt_img, T_max=num_epochs)
+        # Stage A: Reconstruction, Range Anchoring & Slope Pretraining
+        opt_dem = torch.optim.Adam(dem_gen.parameters(), lr=1e-4, betas=(0.9, 0.999), weight_decay=1e-4)
+        opt_img = torch.optim.Adam(img_gen.parameters(), lr=1e-4, betas=(0.9, 0.999), weight_decay=1e-4)
+        sched_dem = torch.optim.lr_scheduler.CosineAnnealingLR(opt_dem, T_max=num_epochs, eta_min=1e-6)
+        sched_img = torch.optim.lr_scheduler.CosineAnnealingLR(opt_img, T_max=num_epochs, eta_min=1e-6)
 
         dem_gen.train()
         img_gen.train()
@@ -168,6 +174,7 @@ def run_training_stage(
         for epoch in range(1, num_epochs + 1):
             total_dem_loss = 0.0
             total_img_loss = 0.0
+            total_anchor_loss = 0.0
             total_slope_loss = 0.0
             num_batches = 0
 
@@ -175,34 +182,41 @@ def run_training_stage(
                 lr_ortho = batch["lr_ortho"].to(device)
                 lr_dem = batch["lr_dem"].to(device)
 
-                # --- DEM-SR Update ---
+                # --- DEM-SR Update with Strict Elevation Conservation ---
                 opt_dem.zero_grad()
                 sr_dem = dem_gen(lr_dem)
 
-                # Scale consistency: downsampled SR DEM must match input LR DEM
+                # Scale consistency: downsampled SR DEM must match input LR DEM exactly
                 down_dem = F.interpolate(sr_dem, size=(lr_dem.shape[2], lr_dem.shape[3]), mode="area")
                 l_recon_dem = F.l1_loss(down_dem, lr_dem)
+
+                # Elevation Range Anchor: prevents range inflation and mean drift
+                l_anchor = anchor_loss_fn(sr_dem, lr_dem)
 
                 # Reference slope from bicubic interpolation
                 ref_sr_dem = F.interpolate(lr_dem, size=(sr_dem.shape[2], sr_dem.shape[3]), mode="bicubic", align_corners=False)
                 l_slope = slope_loss_fn(sr_dem, ref_sr_dem)
 
-                loss_dem = l_recon_dem + 0.5 * l_slope
+                # Rebalanced loss formulation
+                loss_dem = 10.0 * l_recon_dem + 5.0 * l_anchor + 0.2 * l_slope
                 loss_dem.backward()
+                # Gradient clipping to prevent gradient explosion
+                torch.nn.utils.clip_grad_norm_(dem_gen.parameters(), max_norm=1.0)
                 opt_dem.step()
 
                 # --- Image-SR Update ---
                 opt_img.zero_grad()
                 sr_ortho = img_gen(lr_ortho)
 
-                # Downsampled SR Ortho must match input LR Ortho
                 down_ortho = F.interpolate(sr_ortho, size=(lr_ortho.shape[2], lr_ortho.shape[3]), mode="area")
-                loss_img = F.l1_loss(down_ortho, lr_ortho)
+                loss_img = 10.0 * F.l1_loss(down_ortho, lr_ortho)
 
                 loss_img.backward()
+                torch.nn.utils.clip_grad_norm_(img_gen.parameters(), max_norm=1.0)
                 opt_img.step()
 
                 total_dem_loss += loss_dem.item()
+                total_anchor_loss += l_anchor.item()
                 total_slope_loss += l_slope.item()
                 total_img_loss += loss_img.item()
                 num_batches += 1
@@ -211,13 +225,14 @@ def run_training_stage(
             sched_img.step()
 
             avg_dem = total_dem_loss / max(1, num_batches)
+            avg_anchor = total_anchor_loss / max(1, num_batches)
             avg_slope = total_slope_loss / max(1, num_batches)
             avg_img = total_img_loss / max(1, num_batches)
 
             if epoch % 5 == 0 or epoch == num_epochs:
                 logger.info(
                     f"Stage A [Epoch {epoch:02d}/{num_epochs:02d}] "
-                    f"DEM Loss: {avg_dem:.4f} (Slope L1: {avg_slope:.4f}) | "
+                    f"DEM Loss: {avg_dem:.4f} (Anchor: {avg_anchor:.4f}, Slope: {avg_slope:.4f}) | "
                     f"Image Loss: {avg_img:.4f}"
                 )
 
@@ -237,16 +252,17 @@ def run_training_stage(
             img_gen.load_state_dict(torch.load(stage_a_img, map_location=device, weights_only=True))
             logger.info("Loaded pre-trained Stage A Image weights into Generator.")
 
-        opt_dem = torch.optim.Adam(dem_gen.parameters(), lr=2e-5, betas=(0.9, 0.999))
-        opt_img = torch.optim.Adam(img_gen.parameters(), lr=2e-5, betas=(0.9, 0.999))
-        opt_disc = torch.optim.Adam(img_disc.parameters(), lr=1e-4, betas=(0.9, 0.999))
+        opt_dem = torch.optim.Adam(dem_gen.parameters(), lr=1e-5, betas=(0.9, 0.999), weight_decay=1e-5)
+        opt_img = torch.optim.Adam(img_gen.parameters(), lr=1e-5, betas=(0.9, 0.999), weight_decay=1e-5)
+        opt_disc = torch.optim.Adam(img_disc.parameters(), lr=5e-5, betas=(0.9, 0.999))
 
         dem_gen.train()
         img_gen.train()
         img_disc.train()
 
         for epoch in range(1, num_epochs + 1):
-            total_g_loss = 0.0
+            total_dem_loss = 0.0
+            total_img_loss = 0.0
             total_shading_loss = 0.0
             total_d_loss = 0.0
             num_batches = 0
@@ -257,60 +273,68 @@ def run_training_stage(
                 sun_az = float(batch["sun_azimuth_deg"][0])
                 sun_el = float(batch["sun_elevation_deg"][0])
 
-                # --- 1. Discriminator Step ---
+                # --- 1. Discriminator Step (Strictly on Optical Texture) ---
                 opt_disc.zero_grad()
                 with torch.no_grad():
                     sr_ortho_fake = img_gen(lr_ortho)
-                # Use high-frequency real ortho as target reference
+                # Use bicubic real ortho as texture reference
                 ref_ortho = F.interpolate(lr_ortho, size=(sr_ortho_fake.shape[2], sr_ortho_fake.shape[3]), mode="bicubic", align_corners=False)
                 d_real = img_disc(ref_ortho)
                 d_fake = img_disc(sr_ortho_fake.detach())
                 loss_d = ragan_loss_fn.discriminator_loss(d_real, d_fake)
                 loss_d.backward()
+                torch.nn.utils.clip_grad_norm_(img_disc.parameters(), max_norm=1.0)
                 opt_disc.step()
 
-                # --- 2. Generators Step with Photoclinometry ---
+                # --- 2. DEM Generator Step with Decoupled Photoclinometry ---
                 opt_dem.zero_grad()
-                opt_img.zero_grad()
-
                 sr_dem = dem_gen(lr_dem)
-                sr_ortho = img_gen(lr_ortho)
-
-                # Downsample consistency
                 down_dem = F.interpolate(sr_dem, size=(lr_dem.shape[2], lr_dem.shape[3]), mode="area")
-                down_ortho = F.interpolate(sr_ortho, size=(lr_ortho.shape[2], lr_ortho.shape[3]), mode="area")
                 l_recon_dem = F.l1_loss(down_dem, lr_dem)
+                l_anchor_dem = anchor_loss_fn(sr_dem, lr_dem)
+
+                # Use detached optical guide for photoclinometric shading to decouple optimization
+                with torch.no_grad():
+                    sr_ortho_guide = img_gen(lr_ortho)
+                sr_dem_matched = F.interpolate(sr_dem, size=(sr_ortho_guide.shape[2], sr_ortho_guide.shape[3]), mode="bilinear", align_corners=False)
+                l_shading = shading_loss_fn(sr_dem_matched, sr_ortho_guide, sun_azimuth_deg=sun_az, sun_elevation_deg=sun_el)
+
+                loss_dem = 10.0 * l_recon_dem + 5.0 * l_anchor_dem + 0.1 * l_shading
+                loss_dem.backward()
+                torch.nn.utils.clip_grad_norm_(dem_gen.parameters(), max_norm=1.0)
+                opt_dem.step()
+
+                # --- 3. Image Generator Step (Reconstruction + Low-weight Adversarial) ---
+                opt_img.zero_grad()
+                sr_ortho = img_gen(lr_ortho)
+                down_ortho = F.interpolate(sr_ortho, size=(lr_ortho.shape[2], lr_ortho.shape[3]), mode="area")
                 l_recon_ortho = F.l1_loss(down_ortho, lr_ortho)
 
-                # Shading consistency (Photoclinometric constraint from real sun angle)
-                # Downsample DEM to match ortho spatial grid for shading evaluation
-                sr_dem_matched = F.interpolate(sr_dem, size=(sr_ortho.shape[2], sr_ortho.shape[3]), mode="bilinear", align_corners=False)
-                l_shading = shading_loss_fn(sr_dem_matched, sr_ortho, sun_azimuth_deg=sun_az, sun_elevation_deg=sun_el)
-
-                # Adversarial loss for texture enhancement
                 d_fake_for_g = img_disc(sr_ortho)
                 d_real_for_g = img_disc(ref_ortho).detach()
                 l_adv = ragan_loss_fn.generator_loss(d_real_for_g, d_fake_for_g)
 
-                total_loss_g = l_recon_dem + l_recon_ortho + 0.3 * l_shading + 0.05 * l_adv
-                total_loss_g.backward()
-                opt_dem.step()
+                loss_img = 10.0 * l_recon_ortho + 0.005 * l_adv
+                loss_img.backward()
+                torch.nn.utils.clip_grad_norm_(img_gen.parameters(), max_norm=1.0)
                 opt_img.step()
 
-                total_g_loss += total_loss_g.item()
+                total_dem_loss += loss_dem.item()
+                total_img_loss += loss_img.item()
                 total_shading_loss += l_shading.item()
                 total_d_loss += loss_d.item()
                 num_batches += 1
 
-            avg_g = total_g_loss / max(1, num_batches)
+            avg_dem = total_dem_loss / max(1, num_batches)
+            avg_img = total_img_loss / max(1, num_batches)
             avg_shd = total_shading_loss / max(1, num_batches)
             avg_d = total_d_loss / max(1, num_batches)
 
             if epoch % 5 == 0 or epoch == num_epochs:
                 logger.info(
                     f"Stage B [Epoch {epoch:02d}/{num_epochs:02d}] "
-                    f"Generator Loss: {avg_g:.4f} (Shading L1: {avg_shd:.4f}) | "
-                    f"Discriminator Loss: {avg_d:.4f}"
+                    f"DEM Loss: {avg_dem:.4f} (Shading L1: {avg_shd:.4f}) | "
+                    f"Image Loss: {avg_img:.4f} | Disc Loss: {avg_d:.4f}"
                 )
 
         # Save Final Production Stage B Checkpoints

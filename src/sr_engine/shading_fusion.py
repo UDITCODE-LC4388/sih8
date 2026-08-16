@@ -22,9 +22,11 @@ def refine_dem_with_shading(
     refinement_iterations: int = 15,
     step_size: float = 0.05,
     albedo: float = 0.12,
+    max_delta_meters: float = 2.0,
 ) -> np.ndarray:
     """
     Refines high-frequency elevation details of the SR DEM using photoclinometry (Shape-from-Shading).
+    Maintains strict macroscopic elevation conservation to prevent range inflation and drift.
     
     Args:
         sr_dem: 2D float array of the initial super-resolved DEM (1 m grid).
@@ -35,15 +37,18 @@ def refine_dem_with_shading(
         refinement_iterations: Number of gradient descent steps.
         step_size: Gradient step size.
         albedo: Average lunar surface albedo.
+        max_delta_meters: Maximum allowed elevation change per pixel to prevent distortion.
         
     Returns:
         Refined 2D float array of the super-resolved DEM.
     """
+    initial_mean = float(np.mean(sr_dem))
     refined_dem = sr_dem.copy().astype(np.float64)
 
-    # Illumination unit vector
+    # Illumination unit vector with grazing angle safeguard
+    effective_elevation = max(float(sun_elevation_deg), 5.0)
     az_rad = np.radians(sun_azimuth_deg)
-    el_rad = np.radians(sun_elevation_deg)
+    el_rad = np.radians(effective_elevation)
     sx = np.sin(az_rad) * np.cos(el_rad)
     sy = np.cos(az_rad) * np.cos(el_rad)
     sz = np.sin(el_rad)
@@ -62,7 +67,7 @@ def refine_dem_with_shading(
         p = ndimage.convolve(refined_dem, kx, mode="reflect")
         q = ndimage.convolve(refined_dem, ky, mode="reflect")
 
-        norm = np.sqrt(p**2 + q**2 + 1.0)
+        norm = np.sqrt(p**2 + q**2 + 1.0 + 1e-8)
         nx = -p / norm
         ny = -q / norm
         nz = 1.0 / norm
@@ -79,6 +84,17 @@ def refine_dem_with_shading(
 
         # Propagate gradient corrections back to elevation relief
         delta_z = ndimage.convolve(delta_p, -kx, mode="reflect") + ndimage.convolve(delta_q, -ky, mode="reflect")
+        
+        # Zero-mean damping on gradient update to strictly conserve mean elevation
+        delta_z = delta_z - np.mean(delta_z)
         refined_dem += step_size * delta_z
+
+        # Bound total deformation from base DEM
+        total_delta = np.clip(refined_dem - sr_dem, -max_delta_meters, max_delta_meters)
+        refined_dem = sr_dem + total_delta
+
+    # Ensure final mean elevation exactly matches the base SR DEM
+    current_mean = float(np.mean(refined_dem))
+    refined_dem = refined_dem - (current_mean - initial_mean)
 
     return refined_dem.astype(np.float32)

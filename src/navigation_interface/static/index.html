@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ISRO Lunar Hazard-Map & Safe Landing GCS</title>
+  <title>LunarX | Autonomous Lunar Hazard-Map & Safe Landing GCS</title>
   <!-- IBM Plex Typography Suite -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,16 +15,27 @@
     <!-- Top Mission Header & Telemetry Ticker -->
     <header class="gcs-header">
       <div class="brand">
-        <div class="mission-logo">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3"/>
-            <path d="M12 3a9 9 0 1 0 9 9A9 9 0 0 1 12 3z" fill="currentColor" fill-opacity="0.2"/>
-            <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+        <div class="mission-logo" title="LunarX Autonomous Lunar Landing System">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" class="lunarx-logo">
+            <defs>
+              <linearGradient id="lunarXGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#5EC1D9"/>
+                <stop offset="50%" stop-color="#35D399"/>
+                <stop offset="100%" stop-color="#A78BFA"/>
+              </linearGradient>
+            </defs>
+            <circle cx="16" cy="16" r="14" stroke="url(#lunarXGrad)" stroke-width="1.2" stroke-opacity="0.35" stroke-dasharray="3 2"/>
+            <path d="M 16 4 A 12 12 0 1 0 28 16 A 10 10 0 0 1 16 4 Z" fill="url(#lunarXGrad)" fill-opacity="0.18" stroke="url(#lunarXGrad)" stroke-width="1.2"/>
+            <path d="M 9.5 9.5 L 22.5 22.5" stroke="url(#lunarXGrad)" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M 22.5 9.5 L 9.5 22.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="16" cy="16" r="2.2" fill="#5EC1D9" stroke="#050608" stroke-width="0.8"/>
+            <circle cx="22.5" cy="9.5" r="1.4" fill="#35D399"/>
+            <circle cx="9.5" cy="22.5" r="1.4" fill="#A78BFA"/>
           </svg>
         </div>
         <div class="brand-text">
-          <div class="mission-title">ISRO LUNAR HAZARD-MAP GCS</div>
-          <div class="mission-sub">SIH260008 • 1m Super-Resolution Safe Landing Ground Station</div>
+          <div class="mission-title">LunarX <span class="brand-badge">GCS</span></div>
+          <div class="mission-sub">SIH260008 • Autonomous 1m Hazard-Map & Safe Landing GCS</div>
         </div>
       </div>
 
@@ -54,11 +65,16 @@
 
       <!-- Header Actions -->
       <div class="header-actions">
-        <button id="btnAudioToggle" class="btn-control" title="Toggle Tactical Audio Callouts">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <button id="btnAudioToggle" class="btn-control active" title="Toggle Tactical Audio Callouts (Voice & Telemetry Tones)">
+          <svg id="audioIconOn" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
             <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <svg id="audioIconOff" class="hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
           </svg>
           <span id="audioStatusText">Audio ON</span>
         </button>
@@ -283,7 +299,7 @@
                 </svg>
               </div>
               <div class="gauge-val-text" id="gaugeSunVal">39.1°</div>
-              <div class="gauge-sub">Azimuth: 238.2°</div>
+              <div class="gauge-sub" id="gaugeSunAzSub">Azimuth: 238.2°</div>
             </div>
           </div>
 

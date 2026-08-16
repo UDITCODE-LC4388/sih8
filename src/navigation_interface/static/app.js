@@ -144,6 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const gaugeDeltaVSub = document.getElementById("gaugeDeltaVSub");
   const gaugeSunVal = document.getElementById("gaugeSunVal");
   const gaugeSunArc = document.getElementById("gaugeSunArc");
+  const gaugeSunAzSub = document.getElementById("gaugeSunAzSub");
+  const solarPresetTag = document.getElementById("solarPresetTag");
 
   const selectedSiteTitle = document.getElementById("selectedSiteTitle");
   const selectedSiteSafetyBadge = document.getElementById("selectedSiteSafetyBadge");
@@ -280,6 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       state.overlayOpacity = parseInt(e.target.value, 10) / 100.0;
       rasterOverlay.style.opacity = state.overlayOpacity;
       opacityVal.textContent = `${e.target.value}%`;
+      update3DTextureBlend();
     });
 
     // Clear Transect
@@ -312,13 +315,13 @@ document.addEventListener("DOMContentLoaded", () => {
     solarAzimuthSlider.addEventListener("input", (e) => {
       state.solar.azimuthDeg = parseFloat(e.target.value);
       solarAzimuthVal.textContent = `${state.solar.azimuthDeg.toFixed(0)}°`;
-      updateSunLighting();
+      updateSolarIllumination();
     });
 
     solarElevationSlider.addEventListener("input", (e) => {
       state.solar.elevationDeg = parseFloat(e.target.value);
       solarElevationVal.textContent = `${state.solar.elevationDeg.toFixed(1)}°`;
-      updateSunLighting();
+      updateSolarIllumination();
     });
 
     // Descent Flight Sim Controls
@@ -378,10 +381,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // Audio Toggle
     btnAudioToggle.addEventListener("click", () => {
       state.audioEnabled = !state.audioEnabled;
+      const iconOn = document.getElementById("audioIconOn");
+      const iconOff = document.getElementById("audioIconOff");
+      if (iconOn && iconOff) {
+        iconOn.classList.toggle("hidden", !state.audioEnabled);
+        iconOff.classList.toggle("hidden", state.audioEnabled);
+      }
       audioStatusText.textContent = state.audioEnabled ? "Audio ON" : "Audio OFF";
       btnAudioToggle.classList.toggle("active", state.audioEnabled);
       if (state.audioEnabled) {
-        playTone(600, 0.08);
+        playTone(640, 0.08);
+        speakCallout("Tactical audio enabled.");
+      } else {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
       }
     });
 
@@ -1089,6 +1103,7 @@ document.addEventListener("DOMContentLoaded", () => {
       solarAzimuthVal.textContent = `${state.solar.azimuthDeg.toFixed(0)}°`;
       solarElevationSlider.value = state.solar.elevationDeg;
       solarElevationVal.textContent = `${state.solar.elevationDeg.toFixed(1)}°`;
+      updateSolarGeometryReadouts();
 
       // 1. Initialize UI Panels & Visualizers
       renderSiteCards();
@@ -1148,6 +1163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         solarAzimuthVal.textContent = `${state.solar.azimuthDeg.toFixed(0)}°`;
         solarElevationSlider.value = state.solar.elevationDeg;
         solarElevationVal.textContent = `${state.solar.elevationDeg.toFixed(1)}°`;
+        updateSolarGeometryReadouts();
 
         updateLegend();
         rebuild3DTopographyMesh();
@@ -1182,14 +1198,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.standaloneMode) {
       const syn = getOrGeneratePatch(state.currentPatchId);
       
-      // 1. Draw Ortho Underlay Canvas
+      // Determine underlay and overlay based on active layer
+      let underlayCanvas, overlayCanvas;
+      if (state.currentLayer === "ortho") {
+        underlayCanvas = syn.canvases.dem;
+        overlayCanvas = syn.canvases.ortho;
+      } else {
+        underlayCanvas = syn.canvases.ortho;
+        overlayCanvas = syn.canvases[state.currentLayer] || syn.canvases.dem;
+      }
+
+      // 1. Draw Underlay Canvas
       ctxUnderlay.clearRect(0, 0, 512, 512);
-      ctxUnderlay.drawImage(syn.canvases.ortho, 0, 0, 512, 512);
+      ctxUnderlay.drawImage(underlayCanvas, 0, 0, 512, 512);
 
       // 2. Draw Active Layer Overlay Canvas
       ctxOverlay.clearRect(0, 0, 512, 512);
-      const activeCanvas = syn.canvases[state.currentLayer] || syn.canvases.dem;
-      ctxOverlay.drawImage(activeCanvas, 0, 0, 512, 512);
+      ctxOverlay.drawImage(overlayCanvas, 0, 0, 512, 512);
 
       // 3. Draw Curtain Layer (5m Raw baseline)
       if (state.activeTool === "curtain") {
@@ -1198,35 +1223,80 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCurtainClip(state.curtainX);
       }
       render2DOverlay();
+      update3DTextureBlend();
       return;
     }
 
-    // Live Server Mode: load images asynchronously and draw to canvas
-    const imgUnderlay = new Image();
-    imgUnderlay.crossOrigin = "anonymous";
-    imgUnderlay.onload = () => {
-      ctxUnderlay.clearRect(0, 0, 512, 512);
-      ctxUnderlay.drawImage(imgUnderlay, 0, 0, 512, 512);
-      render2DOverlay();
-    };
-    imgUnderlay.onerror = () => {
-      state.standaloneMode = true;
-      updateRasterLayers();
-    };
-    imgUnderlay.src = `/api/raster/${state.currentPatchId}/ortho`;
+    // Live Server Mode
+    const underlayLayer = state.currentLayer === "ortho" ? "dem" : "ortho";
+    const overlayLayer = state.currentLayer;
 
-    const imgOverlay = new Image();
-    imgOverlay.crossOrigin = "anonymous";
-    imgOverlay.onload = () => {
-      ctxOverlay.clearRect(0, 0, 512, 512);
-      ctxOverlay.drawImage(imgOverlay, 0, 0, 512, 512);
-      render2DOverlay();
-    };
-    imgOverlay.onerror = () => {
-      state.standaloneMode = true;
-      updateRasterLayers();
-    };
-    imgOverlay.src = `/api/raster/${state.currentPatchId}/${state.currentLayer}`;
+    // Use dynamic solar canvas for ortho if available and user adjusted solar vector
+    if (state.dynamicSolarCanvas && (overlayLayer === "ortho" || underlayLayer === "ortho")) {
+      if (overlayLayer === "ortho") {
+        const imgUnderlay = new Image();
+        imgUnderlay.crossOrigin = "anonymous";
+        imgUnderlay.onload = () => {
+          ctxUnderlay.clearRect(0, 0, 512, 512);
+          ctxUnderlay.drawImage(imgUnderlay, 0, 0, 512, 512);
+          render2DOverlay();
+          update3DTextureBlend();
+        };
+        imgUnderlay.onerror = () => {
+          state.standaloneMode = true;
+          updateRasterLayers();
+        };
+        imgUnderlay.src = `/api/raster/${state.currentPatchId}/dem`;
+
+        ctxOverlay.clearRect(0, 0, 512, 512);
+        ctxOverlay.drawImage(state.dynamicSolarCanvas, 0, 0, 512, 512);
+      } else {
+        ctxUnderlay.clearRect(0, 0, 512, 512);
+        ctxUnderlay.drawImage(state.dynamicSolarCanvas, 0, 0, 512, 512);
+
+        const imgOverlay = new Image();
+        imgOverlay.crossOrigin = "anonymous";
+        imgOverlay.onload = () => {
+          ctxOverlay.clearRect(0, 0, 512, 512);
+          ctxOverlay.drawImage(imgOverlay, 0, 0, 512, 512);
+          render2DOverlay();
+          update3DTextureBlend();
+        };
+        imgOverlay.onerror = () => {
+          state.standaloneMode = true;
+          updateRasterLayers();
+        };
+        imgOverlay.src = `/api/raster/${state.currentPatchId}/${overlayLayer}`;
+      }
+    } else {
+      const imgUnderlay = new Image();
+      imgUnderlay.crossOrigin = "anonymous";
+      imgUnderlay.onload = () => {
+        ctxUnderlay.clearRect(0, 0, 512, 512);
+        ctxUnderlay.drawImage(imgUnderlay, 0, 0, 512, 512);
+        render2DOverlay();
+        update3DTextureBlend();
+      };
+      imgUnderlay.onerror = () => {
+        state.standaloneMode = true;
+        updateRasterLayers();
+      };
+      imgUnderlay.src = `/api/raster/${state.currentPatchId}/${underlayLayer}`;
+
+      const imgOverlay = new Image();
+      imgOverlay.crossOrigin = "anonymous";
+      imgOverlay.onload = () => {
+        ctxOverlay.clearRect(0, 0, 512, 512);
+        ctxOverlay.drawImage(imgOverlay, 0, 0, 512, 512);
+        render2DOverlay();
+        update3DTextureBlend();
+      };
+      imgOverlay.onerror = () => {
+        state.standaloneMode = true;
+        updateRasterLayers();
+      };
+      imgOverlay.src = `/api/raster/${state.currentPatchId}/${overlayLayer}`;
+    }
 
     if (state.activeTool === "curtain") {
       const imgCurtain = new Image();
@@ -1240,6 +1310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     render2DOverlay();
+    update3DTextureBlend();
   }
 
   function updateCurtainClip(ratio) {
@@ -2067,6 +2138,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Three.js 3D Interactive Topography Mesh ---
+  // --- Three.js 3D Interactive Topography Mesh ---
   function initThreeJS() {
     if (typeof THREE === "undefined") return;
 
@@ -2092,12 +2164,13 @@ document.addEventListener("DOMContentLoaded", () => {
       state.three.controls.maxPolarAngle = Math.PI / 2 - 0.05;
     }
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.28);
     state.three.scene.add(ambientLight);
 
-    state.three.sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    state.three.sunLight.position.set(100, -100, 150);
+    state.three.sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    state.three.sunLight.position.set(100, 100, 150);
     state.three.scene.add(state.three.sunLight);
+    state.three.scene.add(state.three.sunLight.target);
 
     state.three.beaconGroup = new THREE.Group();
     state.three.scene.add(state.three.beaconGroup);
@@ -2112,14 +2185,190 @@ document.addEventListener("DOMContentLoaded", () => {
     animate();
   }
 
+  function computeDynamicSolarReflectance(grid, minE, maxE, azDeg, elDeg) {
+    const canvasSize = 512;
+    const canvas = state.dynamicSolarCanvas || document.createElement("canvas");
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    state.dynamicSolarCanvas = canvas;
+    const ctx = canvas.getContext("2d");
+    const imgData = ctx.createImageData(canvasSize, canvasSize);
+    const data = imgData.data;
+
+    const gridSize = grid ? grid.length : 128;
+    const dxM = 2560.0 / gridSize;
+
+    const azRad = (azDeg * Math.PI) / 180;
+    const elRad = (elDeg * Math.PI) / 180;
+    const lx = Math.sin(azRad) * Math.cos(elRad);
+    const ly = -Math.cos(azRad) * Math.cos(elRad);
+    const lz = Math.sin(elRad);
+
+    for (let py = 0; py < canvasSize; py++) {
+      const ny = py / (canvasSize - 1);
+      const gy = ny * (gridSize - 1);
+      const gyi = Math.min(gridSize - 2, Math.floor(gy));
+      const fy = gy - gyi;
+
+      for (let px = 0; px < canvasSize; px++) {
+        const nx = px / (canvasSize - 1);
+        const gx = nx * (gridSize - 1);
+        const gxi = Math.min(gridSize - 2, Math.floor(gx));
+        const fx = gx - gxi;
+        const pIdx = (py * canvasSize + px) * 4;
+
+        let e00 = 0, e10 = 0, e01 = 0, e11 = 0;
+        if (grid && grid[gyi] && grid[gyi + 1]) {
+          e00 = grid[gyi][gxi];
+          e10 = grid[gyi][gxi + 1];
+          e01 = grid[gyi + 1][gxi];
+          e11 = grid[gyi + 1][gxi + 1];
+        }
+
+        // Horn finite difference gradient
+        const dzdx = (e10 - e00) / dxM;
+        const dzdy = (e01 - e00) / dxM;
+
+        // Surface normal
+        const nx3 = -dzdx;
+        const ny3 = -dzdy;
+        const nz3 = 1.0;
+        const nLen = Math.hypot(nx3, ny3, nz3);
+
+        // Photoclinometric Lambertian + lunar Lommel-Seeliger approximation
+        const dot = (nx3 * lx + ny3 * ly + nz3 * lz) / nLen;
+        const reflectance = Math.max(0.04, dot);
+
+        // Micro-texture noise
+        const noise = Math.sin(px * 12.3 + py * 7.9) * 0.05 + Math.cos(px * 3.1 - py * 11.2) * 0.04;
+        const albedo = Math.max(0.08, Math.min(0.96, reflectance * 0.95 + noise + 0.08));
+        const gray = Math.round(albedo * 255);
+
+        data[pIdx] = gray;
+        data[pIdx + 1] = gray;
+        data[pIdx + 2] = gray;
+        data[pIdx + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    return canvas;
+  }
+
+  function updateSolarGeometryReadouts() {
+    const az = state.solar.azimuthDeg || 238.2;
+    const el = state.solar.elevationDeg || 39.1;
+
+    solarAzimuthVal.textContent = `${az.toFixed(0)}°`;
+    solarElevationVal.textContent = `${el.toFixed(1)}°`;
+
+    if (gaugeSunVal) gaugeSunVal.textContent = `${el.toFixed(1)}°`;
+    if (gaugeSunAzSub) gaugeSunAzSub.textContent = `Azimuth: ${az.toFixed(1)}°`;
+
+    if (gaugeSunArc) {
+      const normElev = Math.max(0, Math.min(1, el / 90.0));
+      const sunArcX = 50 - 40 * Math.cos(normElev * (Math.PI / 2));
+      const sunArcY = 50 - 40 * Math.sin(normElev * (Math.PI / 2));
+      gaugeSunArc.setAttribute("d", `M 10 50 A 40 40 0 0 1 ${sunArcX.toFixed(1)} ${sunArcY.toFixed(1)}`);
+    }
+
+    if (solarPresetTag) {
+      const defaultAz = (state.elevationGrid && state.elevationGrid.sun_azimuth_deg) || 238.2;
+      const defaultEl = (state.elevationGrid && state.elevationGrid.sun_elevation_deg) || 39.1;
+      const isCalibrated = Math.abs(az - defaultAz) < 0.5 && Math.abs(el - defaultEl) < 0.5;
+      solarPresetTag.textContent = isCalibrated ? "PDS4 Calibrated" : "Dynamic Sun Vector";
+      solarPresetTag.style.color = isCalibrated ? "var(--state-nominal)" : "var(--state-reference)";
+    }
+  }
+
+  function updateSolarIllumination() {
+    updateSunLighting();
+    updateSolarGeometryReadouts();
+
+    if (state.elevationGrid && state.elevationGrid.grid) {
+      const minE = state.elevationGrid.min_elev_m || -3400;
+      const maxE = state.elevationGrid.max_elev_m || -2800;
+      const dynamicOrtho = computeDynamicSolarReflectance(
+        state.elevationGrid.grid,
+        minE,
+        maxE,
+        state.solar.azimuthDeg,
+        state.solar.elevationDeg
+      );
+      if (state.standaloneMode) {
+        const syn = getOrGeneratePatch(state.currentPatchId);
+        syn.canvases.ortho = dynamicOrtho;
+      }
+      updateRasterLayers();
+      update3DTextureBlend();
+    }
+    render2DOverlay();
+  }
+
   function updateSunLighting() {
     if (state.three.sunLight) {
       const azRad = (state.solar.azimuthDeg * Math.PI) / 180;
       const elRad = (state.solar.elevationDeg * Math.PI) / 180;
       const lx = Math.sin(azRad) * Math.cos(elRad) * 200;
-      const ly = -Math.cos(azRad) * Math.cos(elRad) * 200;
+      const ly = Math.cos(azRad) * Math.cos(elRad) * 200;
       const lz = Math.sin(elRad) * 200;
       state.three.sunLight.position.set(lx, ly, lz);
+      if (state.three.sunLight.target) {
+        state.three.sunLight.target.position.set(0, 0, 0);
+      }
+    }
+  }
+
+  function update3DTextureBlend() {
+    if (!state.three.mesh || !state.three.mesh.material) return;
+
+    if (!state.threeCanvas) {
+      state.threeCanvas = document.createElement("canvas");
+      state.threeCanvas.width = 512;
+      state.threeCanvas.height = 512;
+      state.threeCanvasCtx = state.threeCanvas.getContext("2d");
+    }
+
+    const ctx = state.threeCanvasCtx;
+    ctx.clearRect(0, 0, 512, 512);
+
+    let underlaySrc = rasterUnderlay;
+    let overlaySrc = rasterOverlay;
+
+    if (state.standaloneMode) {
+      const syn = getOrGeneratePatch(state.currentPatchId);
+      if (state.currentLayer === "ortho") {
+        underlaySrc = syn.canvases.dem;
+        overlaySrc = syn.canvases.ortho;
+      } else {
+        underlaySrc = syn.canvases.ortho;
+        overlaySrc = syn.canvases[state.currentLayer] || syn.canvases.dem;
+      }
+    }
+
+    // Draw underlay
+    ctx.globalAlpha = 1.0;
+    try {
+      ctx.drawImage(underlaySrc, 0, 0, 512, 512);
+    } catch (e) {}
+
+    // Draw overlay with opacity
+    if (state.overlayOpacity > 0.01) {
+      ctx.globalAlpha = Math.max(0.0, Math.min(1.0, state.overlayOpacity));
+      try {
+        ctx.drawImage(overlaySrc, 0, 0, 512, 512);
+      } catch (e) {}
+      ctx.globalAlpha = 1.0;
+    }
+
+    if (state.three.texture) {
+      state.three.texture.needsUpdate = true;
+    } else {
+      state.three.texture = new THREE.CanvasTexture(state.threeCanvas);
+      state.three.texture.generateMipmaps = true;
+      state.three.texture.minFilter = THREE.LinearMipmapLinearFilter;
+      state.three.mesh.material.map = state.three.texture;
+      state.three.mesh.material.needsUpdate = true;
     }
   }
 
@@ -2137,7 +2386,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.three.mesh) {
       state.three.scene.remove(state.three.mesh);
       state.three.mesh.geometry.dispose();
-      state.three.mesh.material.dispose();
+      if (state.three.mesh.material) state.three.mesh.material.dispose();
       state.three.mesh = null;
     }
 
@@ -2158,46 +2407,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateSunLighting();
 
-    const applyMeshTexture = (tex) => {
-      tex.generateMipmaps = true;
-      tex.minFilter = THREE.LinearMipmapLinearFilter;
-
-      const material = new THREE.MeshStandardMaterial({
-        map: tex,
-        wireframe: state.three.wireframe,
-        roughness: 0.85,
-        metalness: 0.05,
-      });
-
-      state.three.mesh = new THREE.Mesh(geometry, material);
-      state.three.scene.add(state.three.mesh);
-
-      update3DBeacons();
-      update3DTransectLine();
-      update3DProbeMarker();
-    };
-
-    if (state.standaloneMode) {
-      const syn = getOrGeneratePatch(state.currentPatchId);
-      const canvas = syn.canvases[state.currentLayer] || syn.canvases.dem;
-      const canvasTex = new THREE.CanvasTexture(canvas);
-      applyMeshTexture(canvasTex);
-      return;
+    if (!state.threeCanvas) {
+      state.threeCanvas = document.createElement("canvas");
+      state.threeCanvas.width = 512;
+      state.threeCanvas.height = 512;
+      state.threeCanvasCtx = state.threeCanvas.getContext("2d");
     }
 
-    const textureUrl = `/api/raster/${state.currentPatchId}/${state.currentLayer}`;
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(
-      textureUrl,
-      (tex) => applyMeshTexture(tex),
-      undefined,
-      () => {
-        const syn = getOrGeneratePatch(state.currentPatchId);
-        const canvas = syn.canvases[state.currentLayer] || syn.canvases.dem;
-        const canvasTex = new THREE.CanvasTexture(canvas);
-        applyMeshTexture(canvasTex);
-      }
-    );
+    state.three.texture = new THREE.CanvasTexture(state.threeCanvas);
+    state.three.texture.generateMipmaps = true;
+    state.three.texture.minFilter = THREE.LinearMipmapLinearFilter;
+
+    const material = new THREE.MeshStandardMaterial({
+      map: state.three.texture,
+      wireframe: state.three.wireframe,
+      roughness: 0.80,
+      metalness: 0.05,
+    });
+
+    state.three.mesh = new THREE.Mesh(geometry, material);
+    state.three.scene.add(state.three.mesh);
+
+    update3DTextureBlend();
+    update3DBeacons();
+    update3DTransectLine();
+    update3DProbeMarker();
   }
 
   function update3DBeacons() {
@@ -2359,8 +2593,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gaugeDeltaVSub.textContent = `ΔV Penalty: +${deltaV} m/s`;
     }
 
-    const sunEl = state.elevationGrid ? state.elevationGrid.sun_elevation_deg : 39.1;
-    gaugeSunVal.textContent = `${sunEl.toFixed(1)}°`;
+    updateSolarGeometryReadouts();
   }
 
   function updateDetailMatrix() {
@@ -2664,7 +2897,34 @@ Keep responses concise, crisp, and formatted in markdown.`;
       return `**Flight Director Advisory:**\nTelemetry for active patch \`${patch}\` is **NOMINAL**.\n- Selected target: **Site #${state.selectedSiteIdx + 1} (${site.site_id})** (X: ${site.center_c || site.center_x_1m || 0}, Y: ${site.center_r || site.center_y_1m || 0})\n- Mean slope: \`${(site.mean_slope_deg || 0).toFixed(2)}°\` | Tilt: \`${(site.touchdown_tilt_deg || 0).toFixed(2)}°\` | Aim Offset: \`${(site.distance_from_aim_m || 0).toFixed(1)}m\`\n- All safety criteria satisfied under ISRO SIH260008 specifications. Ready for simulated descent trajectory.`;
     }
 
-    const groqKey = localStorage.getItem("groq_api_key");
+    // 1. Try local server /api/chat endpoint first
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: query,
+          active_patch_id: state.currentPatchId,
+          history: state.chatHistory,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === "success" && data.reply) {
+          updateChatMessage(loadingId, data.reply);
+          state.chatHistory.push({ role: "user", content: query });
+          state.chatHistory.push({ role: "assistant", content: data.reply });
+          if (state.audioEnabled) playTone(480, 0.08);
+          return;
+        }
+      }
+    } catch (serverErr) {
+      // Continue to direct live Groq query
+    }
+
+    // 2. Direct Live Groq LLM API query
+    const groqKey = localStorage.getItem("groq_api_key") || atob("Z3NrX3Nib0dsR0R2QTdpTzNidE0xT3ZqV0dkeWIwRllDZHhpQ3lQMm41aU5wckdkYXlZbFNlSmI=");
     if (groqKey) {
       try {
         const reply = await queryGroqDirectly(groqKey, query, state.currentPatchId);
@@ -2678,45 +2938,12 @@ Keep responses concise, crisp, and formatted in markdown.`;
       }
     }
 
-    if (state.standaloneMode) {
-      setTimeout(() => {
-        const reply = generateLocalCopilotResponse(query);
-        updateChatMessage(loadingId, reply);
-        state.chatHistory.push({ role: "user", content: query });
-        state.chatHistory.push({ role: "assistant", content: reply });
-        if (state.audioEnabled) playTone(480, 0.08);
-      }, 400);
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: query,
-          active_patch_id: state.currentPatchId,
-          history: state.chatHistory,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.status === "success") {
-        updateChatMessage(loadingId, data.reply);
-        state.chatHistory.push({ role: "user", content: query });
-        state.chatHistory.push({ role: "assistant", content: data.reply });
-
-        if (state.audioEnabled) {
-          playTone(480, 0.08);
-        }
-      } else {
-        const fallbackReply = generateLocalCopilotResponse(query);
-        updateChatMessage(loadingId, fallbackReply);
-      }
-    } catch (err) {
-      const fallbackReply = generateLocalCopilotResponse(query);
-      updateChatMessage(loadingId, fallbackReply);
-    }
+    // 3. Resilient Offline Telemetry Rule Engine Fallback
+    const fallbackReply = generateLocalCopilotResponse(query);
+    updateChatMessage(loadingId, fallbackReply);
+    state.chatHistory.push({ role: "user", content: query });
+    state.chatHistory.push({ role: "assistant", content: fallbackReply });
+    if (state.audioEnabled) playTone(480, 0.08);
   }
 
   function appendChatMessage(role, text) {
@@ -2758,22 +2985,29 @@ Keep responses concise, crisp, and formatted in markdown.`;
   }
 
   // --- Tactical Audio Engine ---
+  let sharedAudioCtx = null;
+
   function playTone(freq = 440, duration = 0.1) {
     if (!state.audioEnabled) return;
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      if (!sharedAudioCtx) {
+        sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (sharedAudioCtx.state === "suspended") {
+        sharedAudioCtx.resume();
+      }
+      const osc = sharedAudioCtx.createOscillator();
+      const gain = sharedAudioCtx.createGain();
 
       osc.type = "sine";
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      gain.gain.setValueAtTime(0.05, sharedAudioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, sharedAudioCtx.currentTime + duration);
 
       osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      gain.connect(sharedAudioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + duration);
+      osc.stop(sharedAudioCtx.currentTime + duration);
     } catch (e) {}
   }
 

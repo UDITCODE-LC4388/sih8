@@ -116,4 +116,12 @@ class SREngine:
                 cell_size_meters=1.0,
             )
 
+        # 4. Elevation Range Guardrail (Prevents Range Inflation & Outlier Explosions)
+        lr_min = float(np.min(lr_dem))
+        lr_max = float(np.max(lr_dem))
+        lr_range = max(1.0, lr_max - lr_min)
+        # Allow realistic sub-grid topographic micro-relief while strictly bounding outliers
+        relief_tolerance = min(50.0, 0.15 * lr_range)
+        sr_dem = np.clip(sr_dem, lr_min - relief_tolerance, lr_max + relief_tolerance)
+
         return sr_ortho, sr_dem, uncert_map
